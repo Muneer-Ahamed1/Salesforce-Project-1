@@ -5,7 +5,7 @@ import Navbar from './pages/Navbar'
 
 function App() {
   return (
-<div className="App container bg-slate-100 min-h-[100vh] min-w-[100vw]">
+<div className="App container bg-slate-100 min-h-[100vh] ">
   <Navbar/>
   <Outlet/>
 </div>  )

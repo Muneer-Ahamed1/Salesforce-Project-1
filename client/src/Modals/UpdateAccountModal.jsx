@@ -19,9 +19,7 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
       }
       alert("Please fill Something");
     }
-    useEffect(()=>{
-        setAccountData(accountDataById)
-    },[accountDataById])
+    
     
   
 
@@ -31,8 +29,8 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
           <h3 className="font-bold text-lg pb-2">New Account</h3>
           <hr />
           {
-            (fetchByIdAccountRecord.status==true && AccountData!=null)?
-         <AccountInfoRecord AccountData={AccountData}
+            (fetchByIdAccountRecord.status==true)?
+         <AccountInfoRecord AccountData={accountDataById}
          setAccountData={setAccountData}
          />:<h1>Loading</h1>
           }

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { TypeArr, Ratings, OwnerShip, customerPriority, active, Sla, Upsell_Opportunity } from "../../data";
 import { useSelector, useDispatch } from 'react-redux';
 import { templateAccountSlice } from "../features/Account/AccountSlice";
 
@@ -20,7 +19,9 @@ function AccountInfoRecord({ AccountData, setAccountData }) {
 
     const result = describeDataModifying(accountDescribe);
 
-    
+    if(!AccountData){
+        return <h1>{"ACCOUNT DATA IS NULL"}</h1>
+    }
 
 
 
@@ -37,13 +38,14 @@ function AccountInfoRecord({ AccountData, setAccountData }) {
                                 <span className="label-text text-slate-700">{result["Account Name"].label}*</span>
                             </div>
                             <input type="text" placeholder="Account Name" className="input  w-full max-w-xs bg-white border-2 border-slate-200" required
-                                name={result["Account Name"].name}
+                                name={"Name"}
                                 onChange={(e) => {
                                     console.log("ddfssss==="+e.target.value);
                                     setAccountData((prev)=>({ ...prev, [e.target.name]: e.target.value }))
 
+
                                 }}
-                                value={AccountData[result["Account Name"].name]}
+                                value={(AccountData['Name']) ? AccountData['Name'] : ""}
                             />
                         </div>
 

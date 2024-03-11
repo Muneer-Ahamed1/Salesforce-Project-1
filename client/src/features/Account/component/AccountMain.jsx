@@ -6,6 +6,7 @@ import NewAccountModel from "../../../Modals/NewAccountModel"
 import DeleteAccountModel from '../../../Modals/DeleteAccountModel';
 import UpdateAccountModal from '../../../Modals/UpdateAccountModal';
 import {fetchRecordByIdSlice} from "../../Account/AccountSlice";
+import { Link } from 'react-router-dom';
 
 function AccountMain({ accountData }) {
   console.log(accountData);
@@ -34,7 +35,7 @@ function AccountMain({ accountData }) {
           const { Name, Site, Phone, Id } = account;
           return (
             <div className=' grid grid-cols-4 text-center border-b-2 ' key={Id}>
-              <h1 className=' text-blue-600 hover:text-blue-400 text-center'>{Name}</h1>
+              <Link className=' text-blue-600 hover:text-blue-400 text-center' to={`/account/record/${Id}`}>{Name}</Link>
               <h1>{Site }</h1>
               <h1>{Phone }</h1>
               <div>
@@ -48,9 +49,6 @@ function AccountMain({ accountData }) {
                       document.getElementById('my_modal_3').showModal()
                       fetchIdRecord(Id);
                       setEditAccountId(Id);
-
-
-
                     }
                     }
                     >Edit </a></li>

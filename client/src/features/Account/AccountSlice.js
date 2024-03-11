@@ -137,19 +137,19 @@ const account = createSlice({
             state.error.message = payload;
         })
         builder.addCase(templateAccountSlice.pending,(state)=>{
-            state.accountData.loading = true;
+            state.accountDescribe.loading = true;
         })
 
         builder.addCase(templateAccountSlice.fulfilled,(state,{payload})=>{
             state.accountDescribe.data=payload;
-            state.accountData.loading = false;
+            state.accountDescribe.loading = false;
 
             
         })
         builder.addCase(templateAccountSlice.rejected,(state,{payload})=>{
             state.error.error=true;
             state.error.message=payload;
-            state.accountData.loading = false;
+            state.accountDescribe.loading = false;
 
         })
 

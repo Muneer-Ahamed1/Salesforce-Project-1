@@ -10,6 +10,7 @@ import Store from './store.js';
 import AccountTable from "./pages/AccountPage.jsx";
 import ContactPage from './pages/ContactPage.jsx';
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
+import AccountById from './pages/AccountById.jsx';
 
 const router = createBrowserRouter(
   [
@@ -36,6 +37,15 @@ const router = createBrowserRouter(
           element: (
             <ProtectedRoute>
               <ContactPage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path:"/account/record/:id",
+          element:(
+            <ProtectedRoute>
+              <AccountById/>
+
             </ProtectedRoute>
           )
         }
