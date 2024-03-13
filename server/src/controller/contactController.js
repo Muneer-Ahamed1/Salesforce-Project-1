@@ -2,13 +2,43 @@ const instance = require("../utils/Proxy");
 const ApiError = require("../utils/ApiError");
 const axios=require("axios");
 
+
 const createSalesforceContact = async (req, res, next) => {
     try {
-        console.log(req.body);
-        const recordData = await instance.post("/services/data/v35.0/sobjects/Contact", req.body);
-        return res.status(200).send(recordData.data);
-    } catch (e) {
-        next(new ApiError("Can't create new contact", 404));
+        const { authorization, instance_url } = req.headers;
+        
+        if (!authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+        console.log(authorization)
+        console.log(instance_url) 
+
+        const response = await axios.post(
+            `${instance_url}/services/data/v35.0/sobjects/Contact`,req.body,{
+                headers:{
+                    Authorization: `${authorization}`
+                }
+            }
+        );
+        console.log(response.status);
+        if(response.status==201) {
+
+        return res.status(200).json(response.data);
+        }
+        throw new Error(response);
+    } catch (error) {
+
+        if (error.response) {
+            // Handle axios-related errors
+            const { status, statusText } = error.response;
+            res.status(status).json({
+                statusText: status,
+                status: statusText
+            });
+        } else {
+            // Handle other types of errors here
+            next(new ApiError("Can't fetchById Contacts", 404));
+        }
     }
 }
 
@@ -54,7 +84,6 @@ const fetchByIdContact = async (req, res, next) => {
         const { authorization, instance_url } = req.headers;
         const {id}=req.params;
         
-        console.log(req.body)
         if (!authorization) {
             return res.status(401).json({ error: "Authorization header is missing" });
         }
@@ -62,15 +91,19 @@ const fetchByIdContact = async (req, res, next) => {
         console.log(instance_url) 
 
         const response = await axios.get(
-            `${instance_url}/services/data/v35.0/sobjects/Contact/${id}`
+            `${instance_url}/services/data/v35.0/sobjects/Contact/${id}`,{
+                headers:{
+                    Authorization: `${authorization}`
+                }
+            }
         );
+        console.log(response.status);
         if(response.status==200) {
 
-        return res.status(response.status).json(response.data);
+        return res.status(200).json(response.data);
         }
         throw new Error(response);
     } catch (error) {
-        console.error(error);
 
         if (error.response) {
             // Handle axios-related errors
@@ -88,20 +121,54 @@ const fetchByIdContact = async (req, res, next) => {
 
 
 const updateByIdContact = async (req, res, next) => {
-
     try {
-        const { id } = req.params
+        const { authorization, instance_url } = req.headers;
+        const {id}=req.params;
+        
+        if (!authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
         console.log(id);
-        const recordData = await instance.patch(`/services/data/v35.0/sobjects/Contact/${id}`, req.body);
+        console.log(authorization)
+        console.log(instance_url) 
+        for(let i in req.body) {
+            if(req.body[i].length==0) {
+                delete req.body[i];
+            }
+        }
+        delete req.body["IsEmailBounced"]
+        delete req.body["Name"];
+        delete req.body["Id"];
+        console.log(req.body)
 
-        return res.status(200).json(recordData.data);
+        const response = await axios.patch(
+            `${instance_url}/services/data/v35.0/sobjects/Contact/${id}`,req.body,{
+                headers:{
+                    Authorization: `${authorization}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+        console.log(response.status);
+        if(response.status == 204) {
 
+        return res.status(204).json({ message: "data has been Updated" });
+        }
+    } catch (error) {
+
+        if ( error.response) {
+            // Handle axios-related errors
+            const { status, statusText } = error.response;
+            res.status(status).json({
+                statusText: status,
+                status: statusText
+            });
+        } else {
+            // Handle other types of errors here
+            next(new ApiError("Can't delete account because assigned with undeleted contact object", 404));
+        }
     }
-    catch (e) {
-        res.status(400).json(e);
-
-    }
-}
+};
 
 const deleteByIdContact = async (req, res, next) => {
     try {
@@ -144,10 +211,55 @@ const deleteByIdContact = async (req, res, next) => {
     }
 };
 
+const templateContactController = async (req, res, next) => {
+    try {
+        const { authorization, instance_url } = req.headers;
+
+        if (!authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const headers = {
+            "Content-Type": "application/json",
+            "Authorization": `${authorization}`
+        };
+
+        const response = await axios.get(`${instance_url}/services/data/v54.0/sobjects/Contact/describe`, { headers });
+
+        if (response.status === 200) {
+           
+            return res.status(200).json(response.data);
+        }
+
+        console.error(response.status, response.statusText);
+        res.status(response.status).json({
+            error: `Error calling Salesforce API: ${response.statusText}`
+        });
+    } catch (error) {
+        console.error(error);
+
+        if (error.response) {
+            const { status, statusText } = error.response;
+
+            if (status === 404) {
+                return res.status(404).json({ message: "Can't delete contact because assigned with undeleted account object" });
+            }
+
+            res.status(status).json({
+                statusText: statusText,
+                status: status
+            });
+        } else {
+            next(new Error(error.message));
+        }
+    }
+};
+
 module.exports = {
     createSalesforceContact,
     fetchAllContacts,
     fetchByIdContact,
     updateByIdContact,
-    deleteByIdContact
+    deleteByIdContact,
+    templateContactController
 }

@@ -22,11 +22,11 @@ export default function DeleteContactModel({ deleteById }) {
           <div className="modal-action">
             <form method="dialog" >
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn border-0 mx-4 bg-red-600 text-white"
+              <button className="btn border-0 mx-4 bg-red-600 text-white rounded-md btn-sm"
                 onClick={() => deleteAccountFun(deleteById)}
               >Delete</button>
   
-              <button className="btn bg-blue-600 border-0 text-white">Close</button>
+              <button className="btn bg-blue-600 border-0 text-white btn-sm rounded-md">Close</button>
             </form>
           </div>
         </div>

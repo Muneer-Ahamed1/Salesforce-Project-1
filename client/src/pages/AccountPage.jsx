@@ -2,11 +2,15 @@ import React, { useEffect } from 'react'
 import { fetchAllAccountRecordsSlice } from "../features/Account/AccountSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import AccountMain from '../features/Account/component/AccountMain';
+import OwnerShip from '../features/Account/component/OwnerShip';
+import { ToastContainer } from 'react-toastify';
 function AccountPage() {
     const dispatch = useDispatch();
     const accountData = useSelector((state) => state.account);
     const accountDeleted = accountData.deleteAccount;
     const newAccountRecord=accountData.addAccountRecord;
+    const {fetchOwnerShip}=OwnerShip();
+    console.log(fetchOwnerShip)
 
 
     useEffect(() => {
@@ -18,12 +22,16 @@ function AccountPage() {
     if (accountData.loading) {
         return <h1>Fetching the data...</h1>
     }
-    if (accountData.accountData) {
+    if (accountData.accountData && fetchOwnerShip.data) {
         return <div className=' p-2'>
             <div className="create-account flex justify-end m-4">
-            <button className="btn btn-outline btn-primary btn-sm" onClick={()=>document.getElementById('my_modal_4').showModal()}>New</button>
+            <button className="btn btn-outline btn-primary btn-sm rounded-md" onClick={()=>document.getElementById('my_modal_4').showModal()}>New</button>
             </div>
-            <AccountMain accountData={accountData.accountData} />
+            <ToastContainer/>
+            <AccountMain accountData={accountData.accountData} 
+            fetchOwnerShip={fetchOwnerShip}
+            />
+
         </div>
     }
     if (accountData.error.error) {

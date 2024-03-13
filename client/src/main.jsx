@@ -11,6 +11,7 @@ import AccountTable from "./pages/AccountPage.jsx";
 import ContactPage from './pages/ContactPage.jsx';
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import AccountById from './pages/AccountById.jsx';
+import ContactById from './features/Contact/component/ContactById.jsx';
 
 const router = createBrowserRouter(
   [
@@ -48,6 +49,12 @@ const router = createBrowserRouter(
 
             </ProtectedRoute>
           )
+        },
+        {
+          path:"/contact/getAllContactBy/:id",
+          element:<ProtectedRoute>
+            <ContactById/>
+          </ProtectedRoute>
         }
       ]
     }

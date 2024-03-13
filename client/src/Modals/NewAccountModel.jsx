@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {createRecordApiSlice} from "../features/Account/AccountSlice";
 import AccountInfoRecord from "../pages/AccountInfoRecord";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { useState } from "react";
 export default function NewAccountModel() {
     const dispatch=useDispatch();
     console.log("dfdf");
+    const {accountData}=useSelector((state)=>state.account);
     const newAccountAdded=()=>{
       if(Object.keys(AccountData).length>0) {
         return dispatch(createRecordApiSlice(AccountData));
@@ -22,15 +23,16 @@ export default function NewAccountModel() {
           <hr />
          <AccountInfoRecord AccountData={AccountData}
          setAccountData={setAccountData}
+         accountData={accountData}
          />
   
           <div className="modal-action border-t-2 p-2 flex">
             <form method="dialog">
               {/* if there is a button, it will close the modal */}
-              <button className="btn bg-primary text-white border-0">Close</button>
+              <button className="btn bg-primary text-white border-0 btn-sm">Close</button>
             </form>
             <div onClick={(e)=>e.stopPropagation()}>
-              <button className="btn bg-success text-white border-0 " onClick={()=>newAccountAdded()}>Save</button>
+              <button className="btn bg-success text-white border-0 btn-sm " onClick={()=>newAccountAdded()}>Save</button>
   
               </div>
           </div>

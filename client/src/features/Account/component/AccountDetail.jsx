@@ -1,24 +1,32 @@
 import React from 'react'
 import { useDispatch,useSelector } from 'react-redux';
-import {fetchRecordByIdSlice} from "../AccountSlice"
+import {fetchRecordByIdSlice,fetchAllAccountRecordsSlice} from "../AccountSlice"
 import { useEffect,useState } from 'react';
 import UneditedRecord from "./UneditedRecord";
 import EditedRecord from "./EditedRecord";
+import OwnerShip from './OwnerShip';
 
-function AccountDetail({accountID}) {
+function AccountDetail({accountID,accountData,fetchByIdAccountRecord}) {
     const dispatch=useDispatch();
-    const {fetchByIdAccountRecord}=useSelector((state)=>state.account);
     const[editStatus,setEditStatus]=useState(true);
 
     console.log(editStatus);
     useEffect(()=>{
+        console.log("JHDKKdjhksdjhkfsdjhkfsdjhkdsdsfj")
+        if(accountID) {
+
         dispatch(fetchRecordByIdSlice(accountID));
+        }
+       
     },[accountID]);
+    const {fetchOwnerShip}=OwnerShip();
+
 
 console.log(fetchByIdAccountRecord);
 if(fetchByIdAccountRecord.loading) {
     return <h1>Loading</h1>
 }
+
 
   return (
     <div className="Account-Detail bg-white">
@@ -36,10 +44,16 @@ if(fetchByIdAccountRecord.loading) {
 
 <div className="account-body">
         {
-            (editStatus && fetchByIdAccountRecord.data)?<UneditedRecord/>:<EditedRecord
+            (editStatus && fetchByIdAccountRecord.data && fetchOwnerShip.data)?<UneditedRecord
+            fetchOwnerShip={fetchOwnerShip}
+
+            />:<EditedRecord
             fetchByIdAccountRecord={fetchByIdAccountRecord}
             editStatus={editStatus}
             setEditStatus={setEditStatus}
+            accountID={accountID}
+            fetchOwnerShip={fetchOwnerShip}
+        
             />
         }
         </div>

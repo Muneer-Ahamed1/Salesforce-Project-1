@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import {updateAccontRecordSlice,fetchRecordByIdSlice} from "../features/Account/AccountSlice";
+import {accountUpdateByIdSlice,fetchRecordByIdSlice} from "../features/Account/AccountSlice";
 import AccountInfoRecord from "../pages/AccountInfoRecord";
+import AccountInfoUpdate from "../pages/AccountInfoUpdate";
 
 import { useEffect, useState } from "react";
 import removeNullValues from "../../utils/RemovingNullValues";
@@ -8,17 +9,20 @@ import removeNullValues from "../../utils/RemovingNullValues";
 export default function UpdateAccountModal({id,setEditAccountId}) {
     const dispatch=useDispatch();
 
-    const {fetchByIdAccountRecord }=useSelector((state)=>state.account);
+    const {fetchByIdAccountRecord,accountData }=useSelector((state)=>state.account);
     let accountDataById={...fetchByIdAccountRecord.data};
-    const [AccountData,setAccountData]=useState(null);
 
     console.log(fetchByIdAccountRecord);
-    const updateAccountAdded=(id)=>{
+
+    const updateAccountAdded=(AccountData)=>{
+      console.log(AccountData)
       if(Object.keys(AccountData).length>0) {
-        return dispatch(updateAccontRecordSlice({id:id,accountData:AccountData}));
+         dispatch(accountUpdateByIdSlice({id:id,data:AccountData}));
       }
+      else{
       alert("Please fill Something");
     }
+  }
     
     
   
@@ -30,32 +34,13 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
           <hr />
           {
             (fetchByIdAccountRecord.status==true)?
-         <AccountInfoRecord AccountData={accountDataById}
-         setAccountData={setAccountData}
+         <AccountInfoUpdate data={fetchByIdAccountRecord.data}
+         accountData={accountData}
+         updateAccountAdded={updateAccountAdded}
          />:<h1>Loading</h1>
           }
   
-          <div className="modal-action border-t-2 p-2 flex">
-            <form method="dialog">
-              {/* if there is a button, it will close the modal */}
-              <button className="btn bg-primary text-white border-0"
-              onClick={()=>{
-                setEditAccountId(null)
-            
-            }}
-              >Close</button>
-            </form>
-            <div onClick={(e)=>e.stopPropagation()}>
-              <button className="btn bg-success text-white border-0 " onClick={()=>{
-                updateAccountAdded(id)
-                setEditAccountId(null)
-                setAccountData(null);
-
-            
-            }}>Save</button>
-  
-              </div>
-          </div>
+        
         </div>
       </dialog>
     )

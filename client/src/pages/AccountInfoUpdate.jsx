@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { templateAccountSlice } from "../features/Account/AccountSlice";
 
-function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
-    console.log(AccountData);
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { templateAccountSlice,accountUpdateByIdSlice } from "../features/Account/AccountSlice";
+
+function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
+    console.log(data);
     const dispatch = useDispatch();
     const { error } = useSelector((state) => state.account);
     const accountDescribe = useSelector((state) => state.account.accountDescribe);
+    const [AccountData,setAccountData]=useState(data);
 
     useEffect(() => {
         if (!accountDescribe.data) {
@@ -691,6 +693,55 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                     </textarea>
 
                 </div>
+                
+<div className="modal-action border-t-2 p-2 flex">
+<form method="dialog">
+  {/* if there is a button, it will close the modal */}
+  <button className="btn bg-primary text-white border-0 btn-sm"
+  onClick={()=>{
+    // setEditAccountId(null)
+
+}}
+  >Close</button>
+</form>
+<div onClick={(e)=>e.stopPropagation()}>
+  <button className="btn bg-success text-white border-0 btn-sm " onClick={()=>{
+    const dumpData={};
+    for(const key in AccountData) {
+      if(AccountData[key]!=null) {
+        dumpData[key]=AccountData[key];
+
+      }
+    }
+    delete dumpData["attributes"];
+    delete dumpData["CleanStatus"];
+    delete dumpData["CreatedById"];
+    delete dumpData["CreatedDate"];
+    delete dumpData["Id"];
+    delete dumpData["IsDeleted"];
+    delete dumpData["LastModifiedById"];
+    delete dumpData["LastModifiedDate"];
+    delete dumpData["LastReferencedDate"];
+    delete dumpData["LastViewedDate"];
+    delete dumpData["OwnerId"];
+    delete dumpData["PhotoUrl"];
+    delete dumpData["SystemModstamp"];
+    if(dumpData["BillingAddress"]){
+      delete dumpData["BillingAddress"];
+    }
+    if(dumpData["ShippingAddress"]){
+      delete dumpData["ShippingAddress"];
+    }
+    console.log(dumpData);
+    console.log(AccountData);
+    updateAccountAdded(dumpData);
+
+
+}}>Save</button>
+
+  </div>
+  
+</div>
              
             </form>
         </>
@@ -712,4 +763,46 @@ export const describeDataModifying = (describe) => {
     return result;
 }
 
-export default AccountInfoRecord
+export default AccountInfoUpdate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

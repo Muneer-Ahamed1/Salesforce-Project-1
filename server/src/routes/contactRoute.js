@@ -3,7 +3,8 @@ const {
     fetchAllContacts,
     fetchByIdContact,
     updateByIdContact,
-    deleteByIdContact
+    deleteByIdContact,
+    templateContactController
 }=require("../controller/contactController");
 
 const router=require("express").Router();
@@ -14,6 +15,8 @@ router.route("/record/:id")
 .get(fetchByIdContact)
 .delete(deleteByIdContact)
 .patch(updateByIdContact);
+router.route("/describe").get(templateContactController);
+
 
 
 module.exports=router;

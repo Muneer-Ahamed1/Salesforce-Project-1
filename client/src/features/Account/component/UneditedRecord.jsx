@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import OwnerShipById from './OwnerShipById';
+import OwnerShip from "./OwnerShip"
 
-function UneditedRecord() {
+function UneditedRecord({fetchOwnerShip}) {
   const {fetchByIdAccountRecord}=useSelector((state)=>state.account);
-  console.log(fetchByIdAccountRecord);
+
   
   if(!fetchByIdAccountRecord.data) {
     return <h1>Loading</h1>
   }
-  useEffect(()=>{
-  console.log("fdfd")
-  },[fetchByIdAccountRecord.data])
+ 
 
   return (
     <div className="uneditedDataAccount">
@@ -21,7 +21,7 @@ function UneditedRecord() {
   <div class="section-1">
       <div class="mb-4">
         <p class="text-gray-600">Account Owner:</p>
-        <p>MuneerAhamed Shaik</p>
+        <p>{OwnerShipById(fetchOwnerShip.data.records,fetchByIdAccountRecord.data['OwnerId'])}</p>
       </div>
       <div class="mb-4">
         <p class="text-gray-600">Account Name:</p>
@@ -81,9 +81,9 @@ function UneditedRecord() {
       <p>{fetchByIdAccountRecord.data["Sic"]}</p>
     </div>
     <div class="mb-4">
-      <p class="text-gray-600">Billing Address:</p>
+      <p class="text-gray-600">Billing Address:</p> 
       <p>{fetchByIdAccountRecord.data["BillingAddress"]?.street || ""}</p>
-      <p>{fetchByIdAccountRecord.data["BillingAddress"]?.city+" "+ fetchByIdAccountRecord.data["BillingAddress"]?.postalCode || ""}</p>
+      <p>{fetchByIdAccountRecord.data["BillingAddress"]?.city+" "+ " "+ (fetchByIdAccountRecord.data["BillingAddress"])?fetchByIdAccountRecord.data["BillingAddress"]?.postalCode : ""}</p>
       <p>{fetchByIdAccountRecord.data["BillingAddress"]?.state|| ""}</p>
       <p>{fetchByIdAccountRecord.data["BillingAddress"]?.country|| ""}</p>
 
@@ -91,7 +91,7 @@ function UneditedRecord() {
     <div class="mb-4">
       <p class="text-gray-600">Shipping Address:</p>
       <p>{fetchByIdAccountRecord.data["ShippingAddress"]?.street || ""}</p>
-      <p>{fetchByIdAccountRecord.data["ShippingAddress"]?.city+" "+ fetchByIdAccountRecord.data["BillingAddress"]?.postalCode || ""}</p>
+      <p>{fetchByIdAccountRecord.data["ShippingAddress"]?.city || "" +" "+ (fetchByIdAccountRecord.data["ShippingAddress"])?fetchByIdAccountRecord.data["ShippingAddress"]?.postalCode : ""}</p>
       <p>{fetchByIdAccountRecord.data["ShippingAddress"]?.state || ""}</p>
       <p>{fetchByIdAccountRecord.data["ShippingAddress"]?.country || ""}</p>    </div>
     <div class="mb-4">
@@ -146,10 +146,12 @@ export default UneditedRecord;
 
 function formatDate(date) {
   const options = {
+
     day: "2-digit",
     month: "2-digit",
+
     year: "numeric"
   };
 
-  return date.toLocaleDateString("en-US", options);
+  return date.toLocaleDateString("en-IN", options);
 }

@@ -32,7 +32,7 @@ export default function Navbar() {
         <div>
         
       {
-       (auth.isLogin.login)?<button className=' px-4 py-2 bg-red-700 rounded-md text-white font-medium  hover:bg-red-500' onClick={()=>LogOutFun()}>Logout</button>:""
+       (auth.isLogin.login)?<button className=' btn btn-sm md:btn-md bg-red-700 rounded-md text-white font-medium  hover:bg-red-500 ' onClick={()=>LogOutFun()}>Logout</button>:""
       }
       </div>
       </div>
