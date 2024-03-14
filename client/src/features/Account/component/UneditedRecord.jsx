@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import OwnerShipById from './OwnerShipById';
 import OwnerShip from "./OwnerShip"
+import {fetchRecordByIdSlice} from "../AccountSlice";
+
 
 function UneditedRecord({fetchOwnerShip}) {
-  const {fetchByIdAccountRecord}=useSelector((state)=>state.account);
+  const {fetchByIdAccountRecord,accountUpdateData}=useSelector((state)=>state.account);
+  const dispatch=useDispatch();  
+  useEffect(()=>{
+    if(accountUpdateData.status) {
+      dispatch(fetchRecordByIdSlice());
 
+    }
+  },[accountUpdateData.status])
   
   if(!fetchByIdAccountRecord.data) {
     return <h1>Loading</h1>
@@ -17,7 +25,7 @@ function UneditedRecord({fetchOwnerShip}) {
 <div class="p-4 bg-white md:w-[80%] mx-auto ">
 <h2 class="text-2xl font-bold mb-4">{fetchByIdAccountRecord.data["Name"]}</h2>
 
-  <div className=' p-8  rounded grid grid-cols-2 justify-center'>
+  <div className=' md:p-8  rounded grid grid-cols-2 justify-center'>
   <div class="section-1">
       <div class="mb-4">
         <p class="text-gray-600">Account Owner:</p>

@@ -1,41 +1,60 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { fetchAllAccountRecordsSlice } from "../features/Account/AccountSlice";
+import { FaPlus } from "react-icons/fa";
+
+
 import { useSelector, useDispatch } from 'react-redux';
 import AccountMain from '../features/Account/component/AccountMain';
 import OwnerShip from '../features/Account/component/OwnerShip';
 import { ToastContainer } from 'react-toastify';
+import SearchBar from '../features/Account/component/SearchBar';
+
 function AccountPage() {
     const dispatch = useDispatch();
     const accountData = useSelector((state) => state.account);
     const accountDeleted = accountData.deleteAccount;
-    const newAccountRecord=accountData.addAccountRecord;
-    const {fetchOwnerShip}=OwnerShip();
-    console.log(fetchOwnerShip)
+    const newAccountRecord = accountData.addAccountRecord;
+    const { fetchOwnerShip } = OwnerShip();
+    const [searchQuery, setSearchQuery] = useState("");
+    function onChangeQuery(vl) {
+        setSearchQuery(vl);
+
+    }
 
 
     useEffect(() => {
-        if (accountDeleted.status == true || !accountData.accountData || newAccountRecord.status==true) {
+        if (accountDeleted.status == true || !accountData.accountData) {
             dispatch(fetchAllAccountRecordsSlice());
         }
-    }, [accountDeleted.status,newAccountRecord.status]);
+    }, [accountDeleted.status]);
     console.log(accountData);
-    if (accountData.loading) {
-        return <h1>Fetching the data...</h1>
-    }
+
     if (accountData.accountData && fetchOwnerShip.data) {
-        return <div className=' p-2'>
-            <div className="create-account flex justify-end m-4">
-            <button className="btn btn-outline btn-primary btn-sm rounded-md" onClick={()=>document.getElementById('my_modal_4').showModal()}>New</button>
+        return <div className=' sm:p-2'>
+
+            <div className="create-account flex justify-evenly m-4 ml-2 gap-3">
+                <SearchBar
+                    onChangeQuery={onChangeQuery}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                />
+                <button className="btn btn-outline btn-primary btn-sm rounded-md" onClick={() => document.getElementById('my_modal_4').showModal()}><FaPlus />
+                </button>
             </div>
-            <ToastContainer/>
-            <AccountMain accountData={accountData.accountData} 
-            fetchOwnerShip={fetchOwnerShip}
+            <AccountMain accountData={accountData.accountData}
+                fetchOwnerShip={fetchOwnerShip}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onChangeQuery={onChangeQuery}
+
             />
+
+
 
         </div>
     }
     if (accountData.error.error) {
-        return <h1>SomeThing went wrong!!</h1>
+        return <h1 className=' felx justify-center items-center md:text-xl font-semibold text-lg'>SomeThing went wrong!!</h1>
     }
 
 }

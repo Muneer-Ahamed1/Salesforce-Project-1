@@ -9,7 +9,6 @@ export const fetchAllRecordApi = () => {
                     "instance_url": `${sessionStorage.getItem("instance_url")}`
                 }
             })
-            console.log(fetchAccountData)
             resolve(fetchAccountData);
 
         }
@@ -47,6 +46,8 @@ export const deleteRecordByIdApi = (id) => {
 export const createRecordApi = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log("TOP LINE please check")
+            console.log(data);
             const response = await instance.post("/accountObject/createRecord", data, {
                 headers: {
                     "Content-Type": "application/json",
@@ -54,18 +55,18 @@ export const createRecordApi = (data) => {
                     "instance_url": `${sessionStorage.getItem("instance_url")}`
                 }
             });
+            console.log("JUST STARTED TO DEBUG")
             console.log(response);
 
-            if (response.status == 200) {
+            if (response.status == 204) {
                 return resolve(response);
             }
             throw new Error(response);
         }
         catch (e) {
-            console.log("JKHSDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFuck")
             console.log(e);
 
-            reject(e.response.data);
+            reject(e.response?.data);
         }
     })
 
@@ -103,7 +104,6 @@ export const updateRecordById = (id, data) => {
                 }
             });
 
-            console.log(response.data);
 
             if (response.status === 200) {
                 resolve(response.data);
@@ -149,7 +149,6 @@ export const ownerShipApi = () => {
                 "instance_url": `${sessionStorage.getItem("instance_url")}`
             }
         })
-        console.log("kllllllllllllllllllllllllllllllllsdv")
         console.log(response);
         if (response.status == 200) {
             return resolve(response);

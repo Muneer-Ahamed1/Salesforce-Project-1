@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import AccountInfoRecord from "../../../pages/AccountInfoRecord";
 import {fetchAllAccountRecordsSlice,accountUpdateByIdSlice,fetchRecordByIdSlice} from "../AccountSlice";
 import { useDispatch,useSelector} from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 function EditedRecord({fetchByIdAccountRecord,setEditStatus,editStatus,accountID}) {
     console.log(fetchByIdAccountRecord);
@@ -10,9 +11,7 @@ function EditedRecord({fetchByIdAccountRecord,setEditStatus,editStatus,accountID
     const data=useSelector((state)=>state.account.accountData);
 
 
-    useEffect(()=>{
-      
-    },[])
+    
 
     const submitEditData=()=>{
       const dumpData={};
@@ -41,8 +40,6 @@ function EditedRecord({fetchByIdAccountRecord,setEditStatus,editStatus,accountID
       if(dumpData["ShippingAddress"]){
         delete dumpData["ShippingAddress"];
       }
-      console.log(dumpData);
-      console.log("MNDSSSSSSSSSSSSSSSS")
     
 
       let editData={
@@ -51,15 +48,17 @@ function EditedRecord({fetchByIdAccountRecord,setEditStatus,editStatus,accountID
       }
       dispatch(accountUpdateByIdSlice(editData))
       console.log(editData);
-     
-
-
     }
+
+    useEffect(()=>{
+
+    },[])
     
     const [accountData,setAccountData]=useState(fetchByIdAccountRecord.data);
     
   return (
     <div className="editedRecord">
+      <ToastContainer/>
         <AccountInfoRecord
          AccountData ={accountData}
          setAccountData ={setAccountData}

@@ -1,15 +1,21 @@
 
 import { useDispatch,useSelector } from "react-redux";
 import {deleteRecordByIdSlice} from "../features/Account/AccountSlice";
+import { useEffect, useState } from "react";
 export default function DeleteAccountModel({ deleteAccount }) {
     const dispatch = useDispatch();
     const accountData = useSelector((state) => state.account);
-  
-    const deleteAccountFun = () => {
+    const[deletData,setDeleteData]=useState(false);
+    const deleteAccountFun = (deleteAccount) => {
       console.log(deleteAccount)
+      console.log("Delete Account");
       dispatch(deleteRecordByIdSlice(deleteAccount));
+
+}
+
+    
   
-    }
+    
     return <>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       {/* <button className="btn" onClick={()=>document.getElementById('my_modal_1').showModal()}>open modal</button> */}

@@ -1,14 +1,17 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { templateAccountSlice,accountUpdateByIdSlice } from "../features/Account/AccountSlice";
+import { templateAccountSlice, accountUpdateByIdSlice } from "../features/Account/AccountSlice";
+import Loading from './Loading';
 
-function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
+function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
     console.log(data);
     const dispatch = useDispatch();
-    const { error } = useSelector((state) => state.account);
+    const { error,accountUpdateData } = useSelector((state) => state.account);
     const accountDescribe = useSelector((state) => state.account.accountDescribe);
-    const [AccountData,setAccountData]=useState(data);
+    const [AccountData, setAccountData] = useState(data);
+    const [btnInfo, setBtnInfo] = useState(false);
+    const btnRef = useRef();
 
     useEffect(() => {
         if (!accountDescribe.data) {
@@ -16,9 +19,21 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
         }
 
     }, [])
-    console.log(accountDescribe.data);
+    useEffect(() => {
+        if (btnInfo) {
+
+            btnRef.current.click();
+            setBtnInfo(false);
+        }
+
+    }, [btnInfo])
+    useEffect(()=>{
+        if(accountUpdateData.status) {
+            setBtnInfo(true);
+        }
+    },[accountUpdateData.status])
     if (!accountDescribe.data) {
-        return <h1>Waiting for data fetching</h1>
+        return <Loading/>
     }
 
     const result = describeDataModifying(accountDescribe);
@@ -26,8 +41,6 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
     if (!AccountData) {
         return <h1>{"ACCOUNT DATA IS NULL"}</h1>
     }
-    console.log("Resdsddsdas")
-    console.log(result)
 
     return (
         <>
@@ -59,12 +72,12 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                                 <span className="label-text text-slate-700">Parent Account </span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-sm select-sm"
-                                name={result["Account ID"]?.name}
+                                name={"ParentId"}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
 
                                 }}
-                                value={(AccountData[result['Account ID'].name]) ? AccountData[result['Account ID'].name] : ""}
+                                value={(AccountData["ParentId"]) ? AccountData["ParentId"] : ""}
                             >
                                 {
                                     accountData && accountData.records.map((vl) => {
@@ -325,6 +338,7 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                                 }}
                                 value={(AccountData[result['SIC Code'].name]) ? AccountData[result['SIC Code'].name] : ""}
                             />
+                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.Sic?.status) ? error?.message?.Sic?.message : ""}</p>
                         </div>
                     </div>
                 </div>
@@ -362,7 +376,7 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                             />
                         </div>
 
-                        <div className="billing-section grid grid-cols-2 gap-2">
+                        <div className="billing-section grid md:grid-cols-2 gap-2">
 
                             <div className="section-1">
                                 <div className='Billing Zip'>
@@ -453,7 +467,7 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                             />
                         </div>
 
-                        <div className="Shipping-section grid grid-cols-2 gap-2">
+                        <div className="Shipping-section grid md:grid-cols-2 gap-2">
 
                             <div className="section-1">
                                 <div className='Shipping Zip'>
@@ -513,7 +527,7 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                 <h1 className='additonal-information bg-slate-400 text-white px-2 py-1 rounded-md'>Additional Information</h1>
 
 
-                <div className="third-section grid grid-cols-2 p-3">
+                <div className="third-section grid md:grid-cols-2 p-3">
                     <div className="section-1">
                         <div className="customer-priority">
                             <div className="label">
@@ -693,60 +707,78 @@ function AccountInfoUpdate({ data, accountData ,updateAccountAdded}) {
                     </textarea>
 
                 </div>
-                
-<div className="modal-action border-t-2 p-2 flex">
-<form method="dialog">
-  {/* if there is a button, it will close the modal */}
-  <button className="btn bg-primary text-white border-0 btn-sm"
-  onClick={()=>{
-    // setEditAccountId(null)
 
-}}
-  >Close</button>
-</form>
-<div onClick={(e)=>e.stopPropagation()}>
-  <button className="btn bg-success text-white border-0 btn-sm " onClick={()=>{
-    const dumpData={};
-    for(const key in AccountData) {
-      if(AccountData[key]!=null) {
-        dumpData[key]=AccountData[key];
+                <div className="modal-action border-t-2 p-2 flex">
+                    <form method="dialog">
+                        {/* if there is a button, it will close the modal */}
+                        <button className="btn bg-primary text-white border-0 btn-sm"
+                            onClick={() => {
+                                // setEditAccountId(null)
 
-      }
-    }
-    delete dumpData["attributes"];
-    delete dumpData["CleanStatus"];
-    delete dumpData["CreatedById"];
-    delete dumpData["CreatedDate"];
-    delete dumpData["Id"];
-    delete dumpData["IsDeleted"];
-    delete dumpData["LastModifiedById"];
-    delete dumpData["LastModifiedDate"];
-    delete dumpData["LastReferencedDate"];
-    delete dumpData["LastViewedDate"];
-    delete dumpData["OwnerId"];
-    delete dumpData["PhotoUrl"];
-    delete dumpData["SystemModstamp"];
-    if(dumpData["BillingAddress"]){
-      delete dumpData["BillingAddress"];
-    }
-    if(dumpData["ShippingAddress"]){
-      delete dumpData["ShippingAddress"];
-    }
-    console.log(dumpData);
-    console.log(AccountData);
-    updateAccountAdded(dumpData);
+                            }}
+                        >Close</button>
+                    </form>
 
 
-}}>Save</button>
+                    {(btnInfo) ?
+                        <form method={"dialog"} >
+                            <button className="btn bg-success text-white border-0 btn-sm "
+                                ref={btnRef}
+                                onClick={()=>{console.log("I AM BTN_1")
+                            console.log(btnInfo);
+                            }}
 
-  </div>
-  
-</div>
-             
+
+                            >Save</button>
+
+                        </form> : <form onSubmit={(e)=>e.preventDefault()}>
+                            <button className="btn bg-success text-white border-0 btn-sm " onClick={(e) => {
+                                e.stopPropagation();
+                                const dumpData = {};
+                                console.log(" I AM INSIDE BTN_2")
+
+                                for (const key in AccountData) {
+                                    if (AccountData[key] != null) {
+                                        dumpData[key] = AccountData[key];
+
+                                    }
+                                }
+                                delete dumpData["attributes"];
+                                delete dumpData["CleanStatus"];
+                                delete dumpData["CreatedById"];
+                                delete dumpData["CreatedDate"];
+                                delete dumpData["Id"];
+                                delete dumpData["IsDeleted"];
+                                delete dumpData["LastModifiedById"];
+                                delete dumpData["LastModifiedDate"];
+                                delete dumpData["LastReferencedDate"];
+                                delete dumpData["LastViewedDate"];
+                                delete dumpData["OwnerId"];
+                                delete dumpData["PhotoUrl"];
+                                delete dumpData["SystemModstamp"];
+                                if (dumpData["BillingAddress"]) {
+                                    delete dumpData["BillingAddress"];
+                                }
+                                if (dumpData["ShippingAddress"]) {
+                                    delete dumpData["ShippingAddress"];
+                                }
+                                console.log(dumpData);
+                                console.log(AccountData);
+                                updateAccountAdded(dumpData,setBtnInfo);
+
+
+                            }}>Save</button>
+
+                        </form>
+
+                    }
+                </div>
             </form>
         </>
     )
 }
+
+
 
 
 export const describeDataModifying = (describe) => {

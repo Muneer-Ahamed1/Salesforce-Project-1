@@ -9,15 +9,18 @@ import removeNullValues from "../../utils/RemovingNullValues";
 export default function UpdateAccountModal({id,setEditAccountId}) {
     const dispatch=useDispatch();
 
-    const {fetchByIdAccountRecord,accountData }=useSelector((state)=>state.account);
+    const {fetchByIdAccountRecord,accountData, }=useSelector((state)=>state.account);
     let accountDataById={...fetchByIdAccountRecord.data};
 
     console.log(fetchByIdAccountRecord);
 
-    const updateAccountAdded=(AccountData)=>{
+    const updateAccountAdded=(AccountData,setBtnInfo)=>{
       console.log(AccountData)
       if(Object.keys(AccountData).length>0) {
          dispatch(accountUpdateByIdSlice({id:id,data:AccountData}));
+         if(accountUpdateData.status){
+         setBtnInfo(true);
+         }
       }
       else{
       alert("Please fill Something");
@@ -31,13 +34,16 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box w-11/12 max-w-4xl bg-white  min-h-[70vh] ">
           <h3 className="font-bold text-lg pb-2">New Account</h3>
-          <hr />
           {
             (fetchByIdAccountRecord.status==true)?
          <AccountInfoUpdate data={fetchByIdAccountRecord.data}
          accountData={accountData}
          updateAccountAdded={updateAccountAdded}
-         />:<h1>Loading</h1>
+         />:<h1 className=" text-center p-5 flex justify-center items-center h-[50vh]">
+          <span class="loading loading-spinner text-neutral"></span>
+
+          
+         </h1>
           }
   
         

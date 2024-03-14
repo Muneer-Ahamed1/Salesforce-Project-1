@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginApi } from "./AuthApi";
+
+  import { loginApi,abcDeleteApi} from "./AuthApi";
+  import {toast} from 'react-toastify'
 
 export const loginUserSlice = createAsyncThunk("/api/user/login", async (code, thunkApi) => {
   try {
@@ -11,6 +13,19 @@ export const loginUserSlice = createAsyncThunk("/api/user/login", async (code, t
   }
 });
 
+export const abcDeleteSliceAuthSlice=createAsyncThunk("/api/contact/abcDelice",async (id,thunkApi)=>{
+  try{
+      console.log(id);
+     const response=await abcDeleteApi(id);
+      return response.data;
+  }
+  catch(err){
+  throw thunkApi.rejectWithValue(err);
+
+  }
+ 
+ 
+})
 const login = createSlice({
   name: "login",
   initialState: {
@@ -23,6 +38,11 @@ const login = createSlice({
       message: null,
       error: false,
     },
+    deleteConXyz:{
+      message:null,
+      status:false,
+      loading:false
+    }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -42,6 +62,25 @@ const login = createSlice({
       state.error.error = true;
       state.error.message = payload;
     });
+    builder.addCase(abcDeleteSliceAuthSlice.pending,(state)=>{
+      state.deleteConXyz.loading=true;
+      state.deleteConXyz.status=false;
+      state.deleteConXyz.message=null;
+      toast.pending("Pending Delete Contact")
+  })
+  builder.addCase(abcDeleteSliceAuthSlice.fulfilled,(state,{payload})=>{
+      state.deleteConXyz.loading=false;
+      state.deleteConXyz.status=true;
+      state.deleteConXyz.message=payload;
+      toast.success("success deleted contact")
+
+  })
+  builder.addCase(abcDeleteSliceAuthSlice.rejected,(state,{payload})=>{
+      state.deleteConXyz.loading=false;
+      state.error.error=true;
+      state.error.message=payload;
+      toast.error("Contact can't be deleted")
+  })
     
   },
 });

@@ -1,24 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { ContactDescSlice } from "../features/Contact/ContactSlice"
 import { useDispatch, useSelector } from 'react-redux'
 import { describeDataModifying } from "./AccountInfoRecord";
-import {updateContactByIdSlice} from "../features/Contact/ContactSlice";
+import {updateContactByIdSlice,} from "../features/Contact/ContactSlice";
+import OwnerShip from '../features/Account/component/OwnerShip';
+import OwnerShipById from '../features/Account/component/OwnerShipById';
 
-export default function ContactInfoRecordUpdate({ data, accountData,updateContact }) {
+export default function ContactInfoRecordUpdate({ data, accountData,updateContact,fetchOwnerShip }) {
     const dispatch = useDispatch();
     const [contactData, setContactData] = useState(data);
-    const { descContact } = useSelector((state) => state.contact);
+    const { descContact,updateContactById } = useSelector((state) => state.contact);
+    const contactInfo=useSelector((state) => state.contact.contactData);
+    const {OwnerShip}=useSelector((state)=>state.account);
     useEffect(() => {
         if (!descContact.data) {
             dispatch(ContactDescSlice());
         }
     }, [])
-    if (!descContact.data) {
+    useEffect(()=>{
+        if(contactInfo.data){
+
+        }
+    },[contactInfo.data])
+    if (!descContact.data ) {
         return <h1>Loading descContact</h1>
     }
     const result = describeDataModifying(descContact);
-    console.log(result);
+    useEffect(()=>{
 
+    },[])
+
+    const [btnInfo, setBtnInfo] = useState(false);
+    const btnRef = useRef();
+
+   
+    useEffect(() => {
+        if (btnInfo) {
+
+            btnRef.current.click();
+            setBtnInfo(false);
+        }
+
+    }, [btnInfo])
+    useEffect(()=>{
+        if(updateContactById.status) {
+            setBtnInfo(true);
+        }
+    },[updateContactById.status])
 
 
     return (
@@ -26,13 +54,15 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
             <div className="wrapper sm:p-2">
                 <div className="section-1">
                     <h1 className=' bg-gray-300'>Contact Information</h1>
-                    <div className="section grid grid-cols-2 gap-4 p-2">
+                    <div className="section grid md:grid-cols-2 gap-4 p-2">
                         <div className="part-1">
                             <div className='Account Owner'>
-                                <div className="label">
+                                {/* <div className="label">
                                     <span className="label-text text-slate-700">Contact Owner</span>
                                 </div>
-                                <h1>Muneer Ahamed Shaik</h1>
+                                <h1>{
+                                    (fetchOwnerShip)?(OwnerShipById(fetchOwnerShip,contactData.OwnerId)):""
+                                    }</h1> */}
 
                             </div>
                             <div className=' Name'>
@@ -123,7 +153,9 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
 
                                     }}
                                     value={(contactData[result['Account ID'].name]) ? contactData[result['Account ID'].name] : ""}
+
                                 >
+                                    <option value="">--Value--</option>
                                     {
                                         accountData && accountData.records.map((vl) => {
                                             const { Id, Name } = vl;
@@ -188,7 +220,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                 />
 
                             </div>
-                            <div className="Reports To">
+                            {/* <div className="Reports To">
                                 <div className="label">
                                     <div className="label-text text-slate-700">
                                         {
@@ -196,15 +228,28 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                         }
                                     </div>
                                 </div>
-                                <input type="type" placeholder="Type here" className="input input-bordered w-full  rounded-sm input-sm bg-white"
-                                    name={result["Reports To ID"]?.name}
-                                    value={(contactData[result['Reports To ID']?.name]) ? contactData[result['Reports To ID']?.name] : ""}
+                                
+                                <select className="select select-bordered w-full max-w-xs bg-white rounded-sm select-sm"
+                                   name={result["Reports To ID"]?.name}
+                                   value={(contactData[result['Reports To ID']?.name]) ? contactData[result['Reports To ID']?.name] : ""}
                                     onChange={(e) => {
                                         setContactData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
                                     }}
-                                />
 
-                            </div>
+                                >
+                                    <option value="">--Value--</option>
+                                    {
+                                        contactInfo && contactInfo.data.records.map((vl) => {
+                                            const { Id, Name } = vl;
+                                            return (
+                                                <option value={Id}>{Name}</option>
+                                            )
+                                        })
+
+                                    }
+                                </select>
+
+                            </div> */}
                             <div className="Lead Source">
                                 <div className="label block">
                                     <div className="label-text text-slate-700">
@@ -421,7 +466,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                 />
                             </div>
 
-                            <div className="Mailing-section grid grid-cols-2 gap-2">
+                            <div className="Mailing-section grid md:grid-cols-2 gap-2">
 
                                 <div className="section-1">
                                     <div className='Mailing Zip'>
@@ -512,7 +557,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                 />
                             </div>
 
-                            <div className="Other-section grid grid-cols-2 gap-2">
+                            <div className="Other-section grid md:grid-cols-2 gap-2">
 
                                 <div className="section-1">
                                     <div className='Other Zip/Postal Code'>
@@ -660,6 +705,18 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                         }}
                     >Close</button>
                 </form>
+                {(btnInfo) ?
+                        <form method={"dialog"} >
+                            <button className="btn bg-success text-white border-0 btn-sm "
+                                ref={btnRef}
+                                onClick={()=>{console.log("I AM BTN_1")
+                            console.log(btnInfo);
+                            }}
+
+
+                            >Save</button>
+
+                        </form> :
                 <div onClick={(e) => e.stopPropagation()}>
                     <button className="btn bg-success text-white border-0 btn-sm " onClick={() => {
                         const dumpData = {};
@@ -697,7 +754,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                     }}>Save</button>
 
                 </div>
-
+}
             </div>
         </div>
     )

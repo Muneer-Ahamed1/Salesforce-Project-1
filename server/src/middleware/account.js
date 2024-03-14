@@ -28,7 +28,7 @@ const accountMiddleware = (req, res, next) => {
         },
        
     };
-
+console.log("I AM ACCOUNT MIDDLEWARE")
     console.log(req.body);
 
     if (!req.body) {
@@ -41,11 +41,7 @@ const accountMiddleware = (req, res, next) => {
         errorValidation["Name"]["message"] = "Please Provide a Name";
     }
 
-    if (req.body["AccountNumber"]?.length>0 && isNaN(req.body["AccountNumber"])) {
-        errorValidation["status"] = true;
-        errorValidation["AccountNumber"]["status"] = true;
-        errorValidation["AccountNumber"]["message"] = "Please Provide a valid Account Number";
-    }
+   
     if (req.body["AnnualRevenue"]?.length>0 && isNaN(req.body["AnnualRevenue"])) {
         errorValidation["status"] = true;
         errorValidation["AnnualRevenue"]["status"] = true;

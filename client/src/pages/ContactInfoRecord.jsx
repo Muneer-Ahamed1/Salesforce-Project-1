@@ -2,19 +2,20 @@ import React, { useEffect } from 'react'
 import { ContactDescSlice } from "../features/Contact/ContactSlice"
 import { useDispatch, useSelector } from 'react-redux'
 import { describeDataModifying } from "./AccountInfoRecord";
+import Loading from './Loading';
 function ContactInfoRecord({ contactData, setContactData,accountData }) {
     const dispatch = useDispatch();
     const { descContact } = useSelector((state) => state.contact);
+
     useEffect(() => {
         if (!descContact.data) {
             dispatch(ContactDescSlice());
         }
     }, [])
     if (!descContact.data) {
-        return <h1>Loading descContact</h1>
+        return <Loading></Loading>
     }
     const result = describeDataModifying(descContact);
-    console.log(result);
     
 
 
@@ -23,15 +24,9 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
             <div className="wrapper sm:p-2">
                 <div className="section-1">
                     <h1 className=' bg-gray-300'>Contact Information</h1>
-                    <div className="section grid grid-cols-2 gap-4 p-2">
+                    <div className="section grid md:grid-cols-2 gap-4 p-2">
                         <div className="part-1">
-                            <div className='Account Owner'>
-                                <div className="label">
-                                    <span className="label-text text-slate-700">Contact Owner</span>
-                                </div>
-                                <h1>Muneer Ahamed Shaik</h1>
-
-                            </div>
+                           
                             <div className=' Name'>
                                 <div className="label">
                                     <span className="label-text text-slate-700">Name *</span>
@@ -420,7 +415,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                 />
                             </div>
 
-                            <div className="Mailing-section grid grid-cols-2 gap-2">
+                            <div className="Mailing-section grid md:grid-cols-2 gap-2">
 
                                 <div className="section-1">
                                     <div className='Mailing Zip'>
@@ -511,7 +506,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                 />
                             </div>
 
-                            <div className="Other-section grid grid-cols-2 gap-2">
+                            <div className="Other-section grid md:grid-cols-2 gap-2">
 
                                 <div className="section-1">
                                     <div className='Other Zip/Postal Code'>

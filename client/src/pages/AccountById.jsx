@@ -6,6 +6,7 @@ import AccountRelatedPage from './AccountRelatedPage';
 import { AccountDiv } from '../features/Account/component/AccountRelated';
 import {fetchContactByIdSlice} from "../features/Contact/ContactSlice";
 import {fetchAllAccountRecordsSlice,fetchRecordByIdSlice} from "../features/Account/AccountSlice";
+import Loading from './Loading';
 function AccountById() {
     const accountID=useParams().id;
     const{accountData,fetchByIdAccountRecord}=useSelector((state)=>state.account);
@@ -27,12 +28,12 @@ function AccountById() {
 
      
 if(!fetchByIdAccountRecord.data && !accountData) {
-    return <h1>Loading</h1>
+    return <Loading/>
 
 }
 
   return (
-    <div className="container bg-slate-50 min-h-[90vh] p-4 rounded my-2">
+    <div className="container bg-slate-50 min-h-[90vh] sm:p-4 rounded my-2">
              <AccountDiv
              fetchByIdAccountRecord={fetchByIdAccountRecord}
              />

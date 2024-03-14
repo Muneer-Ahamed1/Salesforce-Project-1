@@ -5,7 +5,6 @@ function OwnerShip() {
     const dispatch=useDispatch();
     const {fetchOwnerShip}=useSelector((state)=>state.account);
     useEffect(() => {
-        console.log("dfsdfsdfdf I am here")
         if (!fetchOwnerShip.data) {
           dispatch(fetchOwnerShipSlice());
         }

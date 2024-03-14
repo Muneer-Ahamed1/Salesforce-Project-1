@@ -139,7 +139,9 @@ const updateByIdContact = async (req, res, next) => {
         delete req.body["IsEmailBounced"]
         delete req.body["Name"];
         delete req.body["Id"];
-        console.log(req.body)
+        if(! req.body["LastName"] || !req.body["FirstName"] || !req.body["Salutation"]) {
+            res.status(400).json({message:"Bad Request"});
+        }
 
         const response = await axios.patch(
             `${instance_url}/services/data/v35.0/sobjects/Contact/${id}`,req.body,{
@@ -149,7 +151,7 @@ const updateByIdContact = async (req, res, next) => {
                 }
             }
         );
-        console.log(response.status);
+        console.log(response);
         if(response.status == 204) {
 
         return res.status(204).json({ message: "data has been Updated" });
@@ -191,6 +193,7 @@ const deleteByIdContact = async (req, res, next) => {
             }
         );
         console.log(response.status);
+        console.log(response);
         if(response.status == 204) {
 
         return res.status(204).json({ message: "data has been deleted" });

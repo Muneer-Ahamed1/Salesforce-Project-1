@@ -5,14 +5,13 @@ import { useEffect,useState } from 'react';
 import UneditedRecord from "./UneditedRecord";
 import EditedRecord from "./EditedRecord";
 import OwnerShip from './OwnerShip';
+import Loading from '../../../pages/Loading';
 
 function AccountDetail({accountID,accountData,fetchByIdAccountRecord}) {
     const dispatch=useDispatch();
     const[editStatus,setEditStatus]=useState(true);
 
-    console.log(editStatus);
     useEffect(()=>{
-        console.log("JHDKKdjhksdjhkfsdjhkfsdjhkdsdsfj")
         if(accountID) {
 
         dispatch(fetchRecordByIdSlice(accountID));
@@ -22,9 +21,8 @@ function AccountDetail({accountID,accountData,fetchByIdAccountRecord}) {
     const {fetchOwnerShip}=OwnerShip();
 
 
-console.log(fetchByIdAccountRecord);
 if(fetchByIdAccountRecord.loading) {
-    return <h1>Loading</h1>
+    return <Loading/>
 }
 
 

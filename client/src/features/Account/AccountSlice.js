@@ -100,6 +100,10 @@ const account = createSlice({
     initialState: {
         loading: false,
         accountData: null,
+        fetchAllAccountRecord:{
+            error:false,
+            status:false
+        },
         error: {
             message: null,
             error: false
@@ -107,6 +111,7 @@ const account = createSlice({
         accountDescribe: {
             data: null,
             loading: false,
+            error: false
 
         },
         deleteAccount: {
@@ -122,17 +127,30 @@ const account = createSlice({
             message: null,
             loading: false
         },
-        fetchByIdAccountRecord: {
+        fetchByIdAccountRecord: {  
             status: false,
             data: null,
             loading: false,
+            error: false
         },
         fetchOwnerShip: {
-            status: false, data: null, loading: false
+            status: false, data: null, loading: false,error:false
         }
 
     },
-    reducers: {},
+    reducers: {
+        resetData:(state)=>{
+            state.accountUpdateData.loading = false;
+            state.accountUpdateData.message=null;
+            state.accountUpdateData.status=false
+
+        },
+        resetError:(state)=>{
+            state.error.error=false;
+            state.error.message=null;
+        }
+
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchAllAccountRecordsSlice.pending, (state, { payload }) => {
             state.loading = true;
@@ -143,23 +161,34 @@ const account = createSlice({
             state.addAccountRecord.status = false;
             state.addAccountRecord.message = null;
             state.deleteAccount.message = null;
+            state.addAccountRecord.status = false;
+            state.addAccountRecord.message = null;
             state.accountData = payload;
+            state.error.error=false;
+            state.error.message=null;
+            state.fetchAllAccountRecord.status=true
+            state.fetchAllAccountRecord.error=false;
+
         })
         builder.addCase(fetchAllAccountRecordsSlice.rejected, (state, { payload }) => {
             state.loading = false;
             state.error.error = true;
             state.error.message = payload;
+            state.fetchAllAccountRecord.error=true;
 
         })
         builder.addCase(deleteRecordByIdSlice.pending, (state) => {
             state.loading = true;
-            toast.success("pending delete account");
+            toast.warn("pending account delete")
 
         })
         builder.addCase(deleteRecordByIdSlice.fulfilled, (state, { payload }) => {
             state.deleteAccount.status = true;
             state.loading = false;
-            toast.success(payload.message);
+            state.error.error=false;
+            state.error.message=null;
+            toast.success("account is deleted successfully")
+
 
 
             state.deleteAccount.message = payload.message;
@@ -167,7 +196,7 @@ const account = createSlice({
         builder.addCase(deleteRecordByIdSlice.rejected, (state, { payload }) => {
             state.error.error = true;
             state.loading = false;
-            toast.error("You can't delete this record")
+            toast.error("Delete is failed");
 
             state.error.message = payload;
         })
@@ -178,6 +207,9 @@ const account = createSlice({
         builder.addCase(templateAccountSlice.fulfilled, (state, { payload }) => {
             state.accountDescribe.data = payload;
             state.accountDescribe.loading = false;
+            state.error.error=false;
+            state.error.message=null;
+            state.accountDescribe.error=false;
 
 
         })
@@ -185,6 +217,7 @@ const account = createSlice({
             state.error.error = true;
             state.error.message = payload;
             state.accountDescribe.loading = false;
+            state.accountDescribe.error=true;
 
         })
 
@@ -194,6 +227,9 @@ const account = createSlice({
             state.error.message = null;
             state.addAccountRecord.status = false;
             state.addAccountRecord.message = null;
+            toast.warn("pending create account")
+
+            
         })
 
 
@@ -204,11 +240,17 @@ const account = createSlice({
             state.error.message = null;
             state.addAccountRecord.status = true;
             state.addAccountRecord.message = "Added The data";
+            state.error.error=false;
+            state.error.message=null;
+            toast.success("account is successful created")
 
         })
         builder.addCase(createRecordApiSlice.rejected, (state, { payload }) => {
             state.error.error = true;
             state.error.message = payload;
+            state.addAccountRecord.status = false;
+            state.addAccountRecord.message = null;
+            toast.error("account can't be created successfully")
         })
 
         builder.addCase(fetchRecordByIdSlice.pending, (state, { payload }) => {
@@ -220,11 +262,19 @@ const account = createSlice({
             state.fetchByIdAccountRecord.loading = false;
             state.fetchByIdAccountRecord.status = true;
             state.fetchByIdAccountRecord.data = payload;
+            state.accountUpdateData.status=false
+            state.accountUpdateData.message=null;
+            state.accountUpdateData.loading=false;
+            state.error.error=false;
+            state.error.message=null;
+            state.fetchByIdAccountRecord.error=false;
         })
         builder.addCase(fetchRecordByIdSlice.rejected, (state, { payload }) => {
             state.fetchByIdAccountRecord.loading = false;
             state.error.error = true;
             state.error.message = payload;
+            state.fetchByIdAccountRecord.error=true;
+
         })
         builder.addCase(fetchOwnerShipSlice.pending, (state) => {
             state.fetchOwnerShip.loading = true;
@@ -233,19 +283,27 @@ const account = createSlice({
             state.fetchOwnerShip.loading = false;
             state.fetchOwnerShip.status = true;
             state.fetchOwnerShip.data = payload;
+            state.error.error=false;
+            state.fetchOwnerShip.error=false;
+            state.error.message=null;
         })
         builder.addCase(fetchOwnerShipSlice.rejected, (state, { payload }) => {
             state.fetchOwnerShip.loading = false;
             state.error.error = true;
+            state.fetchOwnerShip.error=true
             state.error.message = payload;
         })
         builder.addCase(accountUpdateByIdSlice.pending, (state) => {
             state.accountUpdateData.loading = true;
+            toast.warn("update is in pending")
         })
         builder.addCase(accountUpdateByIdSlice.fulfilled, (state, { payload }) => {
             state.accountUpdateData.loading = false;
             state.accountUpdateData.status = true;
             state.accountUpdateData.message = "Account updated";
+            state.error.error=false;
+            state.error.message=null;
+            toast.success("update is successful")
 
         })
         builder.addCase(accountUpdateByIdSlice.rejected, (state, { payload }) => {
@@ -254,10 +312,11 @@ const account = createSlice({
             state.accountUpdateData.message = null;
             state.error.error = true;
             state.error.message = payload
+            toast.error("something went wrong")
         })
 
 
     }
 })
-
+export const {resetData,resetError}=account.actions
 export default account.reducer;

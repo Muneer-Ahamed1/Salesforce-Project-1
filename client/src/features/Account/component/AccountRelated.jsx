@@ -6,39 +6,52 @@ import { Link } from "react-router-dom";
 import DeleteContactModel from "../../../Modals/DeleteContactModal"
 import UpdateContactModel from "../../../Modals/UpdateContactModel"
 import NewContactModel from "../../../Modals/CreateContactModel";
+import { MdOutlineViewInAr } from "react-icons/md";
+
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+  import { MyDeleteContext } from '../../../ContextApi/DeleteContext';
+  import { SlOptions } from "react-icons/sl";
+  import { IoAddCircle } from "react-icons/io5";
+  import { HiViewColumns } from "react-icons/hi2";
+
+
+  import { useContext } from 'react';
 
 function AccountRelated({ accountID,accountData}) {
   let contactArr;
   const dispatch = useDispatch();
-  const { contactData, deleteContact, updateContactById} = useSelector((state) => state.contact);
+  const { contactData, abcDeleteContact, updateContactById,addContactById} = useSelector((state) => state.contact);
   const [deleteById, setDeleteById] = useState(null);
   const[editById,setEditById]=useState(null);
-  console.log(accountID)
+  const { deleteContext, setDeleteContext } = useContext(MyDeleteContext);
+
 
   useEffect(() => {
-    console.log(accountID);
-    if (deleteContact.status || accountID || updateContactById.status) {
+    if ( accountID || updateContactById.status || addContactById.status || deleteContext) {
+      console.log("fds")
+
 
       dispatch(fetchContactByIdSlice(accountID));
+      setDeleteContext(false);
     }
 
-  }, [accountID, deleteContact.status,updateContactById.status])
+  }, [accountID,updateContactById,addContactById,deleteContext])
+
+
 
   if (contactData.data) {
 
     contactArr = contactData.data.records;
 
   }
-  console.log(contactArr);
 
   return (
-    <div className="Contacts bg-gray-100 rounded-sm p-3 ">
+    <div className="Contacts bg-gray-100 rounded-sm p-3 min-h-[50vh]  ">
       <ToastContainer/>
 
       <div className="contact-wrapper">
-        <div className="wrapper-1 flex items-center justify-between mb-4">
+        <div className="wrapper-1 items-center mb-4">
           <div className="part-1 font-bold text-xl underline">
             Contacts
           </div>
@@ -46,13 +59,22 @@ function AccountRelated({ accountID,accountData}) {
       editById={editById}
       setEditById={setEditById}
       />
-          <div>
-            <button className=' btn bg-green-600 rounded-md text-white btn-sm hover:bg-green-400 border-0'
+      <div className=' flex ml-2 mr-auto'>
+          <div className=' ml-auto mr-4'>
+            <button className='bg-green-600 rounded-md text-white px-2 py-1 hover:bg-green-400 border-0'
               onClick={() => document.getElementById('my_modal_22').showModal()
               
               }
-            >create</button>
+            ><IoAddCircle className=' text-2xl'/></button>
           </div>
+          {(contactData.data) ? <div className=' part-3 bg-slate-100 text-center p-1  flex items-center justify-center '>
+          <Link className=' text-blue-600 hover:text-blue-400 underline font-bold' to={`/contact/getAllContactBy/${accountID}`}>
+          <HiViewColumns className=' text-3xl text-slate-800'/>
+
+
+          </Link>
+        </div> : ""}
+        </div>
         </div>
         <div className="part-2">
 
@@ -82,16 +104,17 @@ function AccountRelated({ accountID,accountData}) {
                   })
                 ) :
                   (
-                    <h1 className=' text-center font-bold'>Empty</h1>
+                    <h1 className=' text-center font-bold m-10'>Empty</h1>
                   )
               }
               </div>
-            ) : <h1 className=' text-center font-bold text-xl'>Loading</h1>
+            ) : <h1 className=' text-center font-bold text-xl h-[40vh] flex justify-center items-center'>
+              <span class="loading loading-spinner text-neutral"></span>
+
+            </h1>
           }
         </div>
-        {(contactData.data) ? <div className=' part-3 bg-slate-100 text-center p-1 '>
-          <Link className=' text-blue-600 hover:text-blue-400 underline font-bold' to={`/contact/getAllContactBy/${accountID}`}>view</Link>
-        </div> : ""}
+        
 
       </div>
       <DeleteContactModel
@@ -113,8 +136,9 @@ export function Card({ Id, Name, Email, Phone, setDeleteById, deleteById,setEdit
       <div className="div flex justify-between p-2 items-center">
         <p>{Name}</p>
         <div class="btn-group">
-          <button type="button" class=" text-white btn btn-sm rounded-sm bg-slate-700 hover:bg-slate-500" data-bs-toggle="dropdown" aria-expanded="false">
-            option
+          <button type="button" class=" text-white px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-500" data-bs-toggle="dropdown" aria-expanded="false">
+          <SlOptions />
+
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#"
@@ -159,31 +183,31 @@ export function Card({ Id, Name, Email, Phone, setDeleteById, deleteById,setEdit
 export function AccountDiv({fetchByIdAccountRecord}) {
   return (
     <div className="AccountDiv my-3">
-      <div className="wrapper-1 flex gap-2 justify-between">
+      <div className="wrapper-1 ">
 
         <div className="div">
-          <p>Account</p>
+          <p className=' font-bold'>Account</p>
           <p>{fetchByIdAccountRecord?.data?.Name}</p>
         </div>
         {/* <div className="newContact">
           <button className=' btn btn-sm bg-slate-800 rounded-md text-white hover:bg-slate-500'>New Contact</button>
         </div> */}
       </div>
-      <div className="wrapper-2 grid grid-cols-4 gap-2 mt-2">
+      <div className="wrapper-2 grid md:grid-cols-4 gap-2 mt-2 grid-cols-1 sm:grid-cols-2">
         <div>
-          <p>Type</p>
+          <p className=' font-bold' >Type</p>
           <p>{fetchByIdAccountRecord?.data?.Type || ""}</p>
         </div>
         <div>
-          <p>Phone</p>
+          <p className=' font-bold'>Phone</p>
           <p>{fetchByIdAccountRecord?.data?.Phone || ""}</p>
         </div>
         <div>
-          <p>Website</p>
+          <p className=' font-bold'> Website</p>
           <p>{fetchByIdAccountRecord?.data?.Website || ""}</p>
         </div>
         <div>
-          <p>Account Owner</p>
+          <p className=' font-bold'>Account Owner</p>
           <p>{fetchByIdAccountRecord?.data?.Phone || ""}</p>
         </div>
       </div>

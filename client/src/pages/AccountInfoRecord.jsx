@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { templateAccountSlice } from "../features/Account/AccountSlice";
+import { templateAccountSlice, resetError } from "../features/Account/AccountSlice";
+import Loading from './Loading';
 
 function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
     console.log(AccountData);
@@ -13,10 +14,11 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
             dispatch(templateAccountSlice());
         }
 
+
     }, [])
     console.log(accountDescribe.data);
     if (!accountDescribe.data) {
-        return <h1>Waiting for data fetching</h1>
+        return <Loading />
     }
 
     const result = describeDataModifying(accountDescribe);
@@ -26,7 +28,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
     }
     console.log("Resdsddsdas")
     console.log(result)
-
+    
     return (
         <>
             <form className='formData flex flex-col' onSubmit={(e) => e.preventDefault}>
@@ -360,7 +362,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                             />
                         </div>
 
-                        <div className="billing-section grid grid-cols-2 gap-2">
+                        <div className="billing-section grid  gap-2">
 
                             <div className="section-1">
                                 <div className='Billing Zip'>
@@ -451,14 +453,14 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                             />
                         </div>
 
-                        <div className="Shipping-section grid grid-cols-2 gap-2">
+                        <div className="Shipping-section grid gap-2">
 
                             <div className="section-1">
                                 <div className='Shipping Zip'>
                                     <div className="label">
                                         <span className="label-text text-slate-700">{result["Shipping Zip/Postal Code"].label}</span>
                                     </div>
-                                    <input type="text" placeholder="Shipping Zip" className="input   max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
+                                    <input type="text" placeholder="Shipping Zip" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                         name={result["Shipping Zip/Postal Code"].name}
                                         onChange={(e) => {
                                             setAccountData({ ...AccountData, [e.target.name]: e.target.value })
@@ -466,6 +468,8 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                                         }}
                                         value={(AccountData[result['Shipping Zip/Postal Code'].name]) ? AccountData[result['Shipping Zip/Postal Code'].name] : ""}
                                     />
+
+
                                 </div>
 
                             </div>
@@ -475,7 +479,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                                     <div className="label">
                                         <span className="label-text text-slate-700">{result['Shipping State/Province'].label}</span>
                                     </div>
-                                    <input type="text" placeholder="Shipping State" className="input  bg-white border-2 border-slate-200 rounded-md input-sm"
+                                    <input type="text" placeholder="Shipping State" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                         name={result['Shipping State/Province'].name}
                                         onChange={(e) => {
                                             setAccountData({ ...AccountData, [e.target.name]: e.target.value })
@@ -511,7 +515,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                 <h1 className='additonal-information bg-slate-400 text-white px-2 py-1 rounded-md'>Additional Information</h1>
 
 
-                <div className="third-section grid grid-cols-2 p-3">
+                <div className="third-section grid md:grid-cols-2 p-3">
                     <div className="section-1">
                         <div className="customer-priority">
                             <div className="label">
@@ -691,7 +695,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                     </textarea>
 
                 </div>
-             
+
             </form>
         </>
     )

@@ -12,13 +12,15 @@ const createSalesforceRecordController = async (req, res, next) => {
         }
 
         delete req.body["Id"];
-        console.log("asdsd")
+
         for(let i in req.body){
             if(req.body[i].length==0) {
             delete req.body[i];
             }
 
         }
+        console.log(authorization)
+        console.log(instance_url);
         console.log(req.body);
 
         const headers = {
@@ -28,7 +30,7 @@ const createSalesforceRecordController = async (req, res, next) => {
 
         const recordData = await axios.post(`${instance_url}/services/data/v35.0/sobjects/Account`, req.body, { headers });
 
-        return res.status(200).json(recordData.data);
+        return res.status(204).json(recordData.data);
     } catch (error) {
         if (error.response) {
             const { status, statusText } = error.response;
@@ -142,8 +144,6 @@ const updateDataByIdSalesforceRecordController = async (req, res, next) => {
 
 
         const recordData = await axios.patch(`${instance_url}/services/data/v35.0/sobjects/Account/${req.params.id}`, req.body, { headers });
-        console.log(res);
-        console.log("Upadreefsdfdfds")
 
         return res.status(200).json(recordData.data);
     } catch (error) {
