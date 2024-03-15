@@ -27,12 +27,14 @@ if (process.env.NODE_ENV === "developnment") {
 }
 if (process.env.NODE_ENV === "production") {
   console.log("i am inside")
-    app.use(express.static("dist"));
-    app.get("/", (req, res) =>
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("/", (req, res) =>
     res.sendFile(
-      path.resolve(__dirname, "dist", "index.html")
+      path.resolve(__dirname, "../", "client", "build", "index.html")
     )
   );
+
   
 
   } else {
