@@ -37,7 +37,6 @@ console.log("I AM INSIDE NEWACCOUNT MODEL")
       return dispatch(createRecordApiSlice(AccountData));
 
     }
-    alert("Please fill Something");
   }
  
 

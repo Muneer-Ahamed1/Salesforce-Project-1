@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start:dev": "SET NODE_ENV=developnment&&nodemon index.js",
-    "start:prod": "SET NODE_ENV=production&&nodemon index.js"
+    "start:prod": "SET NODE_ENV=production&&node index.js"
   },
   "author": "Muneer Ahamed Shaik",
   "license": "ISC",

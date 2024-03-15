@@ -21,7 +21,7 @@ function UneditedRecord({fetchOwnerShip}) {
  
 
   return (
-<div className={`uneditedDataAccount dark: bg-cyan-50 bg-slate-200`}>
+<div className={`uneditedDataAccount dark:bg-cyan-50 bg-slate-200`}>
 <div class="p-4  md:w-[80%] mx-auto ">
 <h2 class="text-2xl font-bold mb-4">{fetchByIdAccountRecord.data["Name"]}</h2>
 

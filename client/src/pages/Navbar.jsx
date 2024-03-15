@@ -3,7 +3,7 @@ import React from 'react'
 import { Menu, X } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { CgLogOut } from "react-icons/cg";
-
+import {Link} from "react-router-dom"
 
 const menuItems = [
 
@@ -29,7 +29,7 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8 ">
         <div className="inline-flex items-center space-x-2">
          
-          <span className="font-bold">SF React</span>
+          <Link className="font-bold" to={"/AccountPage"}>SF React</Link>
         </div>
         <div>
         

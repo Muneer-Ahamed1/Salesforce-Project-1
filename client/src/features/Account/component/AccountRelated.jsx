@@ -29,7 +29,7 @@ function AccountRelated({ accountID,accountData}) {
 
 
   useEffect(() => {
-    if ( accountID || updateContactById.status || addContactBy.Id.status || deleteContext) {
+    if ( accountID || updateContactById.status || addContactById.status || deleteContext) {
 
 
       dispatch(fetchContactByIdSlice(accountID));

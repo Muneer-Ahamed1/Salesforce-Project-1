@@ -46,7 +46,7 @@ export default function HeroThree() {
 
     },[isLogin])
 const authCodeFun=()=>{
-    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=http://localhost:5173&response_type=code`
+    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=http://localhost:3000&response_type=code`
 }
 
   return (
@@ -98,12 +98,12 @@ const authCodeFun=()=>{
              Login
            </button>
 }
-              <button
-                type="button"
+              <a
+                href='https://github.com/Muneer-Ahamed1/Salesforce-Project-1'
                 className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               >
                 Source Code
-              </button>
+              </a>
             </div>
           </div>
         </div>

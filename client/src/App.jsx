@@ -12,14 +12,7 @@ function App() {
   const dispatch=useDispatch();
   const {fetchByIdAccountRecord, fetchOwnerShip, fetchAllAccountRecord, accountDescribe,accountData}=useSelector(state=>state.account);
   const { descContact,contactDataById}=useSelector(state=>state.contact);
-  console.log(accountData);
-  useEffect(()=>{
-    if(!accountData) {
-      dispatch(fetchAllAccountRecordsSlice());
-
-    }
-
-  },[])
+  
 
   
   const [loading, setLoading] = useState(true);
