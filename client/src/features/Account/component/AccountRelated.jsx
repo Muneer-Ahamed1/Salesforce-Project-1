@@ -7,6 +7,7 @@ import DeleteContactModel from "../../../Modals/DeleteContactModal"
 import UpdateContactModel from "../../../Modals/UpdateContactModel"
 import NewContactModel from "../../../Modals/CreateContactModel";
 import { MdOutlineViewInAr } from "react-icons/md";
+import Loading from '../../../pages/Loading';
 
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -28,8 +29,7 @@ function AccountRelated({ accountID,accountData}) {
 
 
   useEffect(() => {
-    if ( accountID || updateContactById.status || addContactById.status || deleteContext) {
-      console.log("fds")
+    if ( accountID || updateContactById.status || addContactBy.Id.status || deleteContext) {
 
 
       dispatch(fetchContactByIdSlice(accountID));
@@ -37,6 +37,12 @@ function AccountRelated({ accountID,accountData}) {
     }
 
   }, [accountID,updateContactById,addContactById,deleteContext])
+  // useEffect(()=>{
+  //   if(contactData.data) {
+  //         dispatch(fetchContactByIdSlice(accountID));
+  //   }
+
+  // },[])
 
 
 
@@ -108,10 +114,10 @@ function AccountRelated({ accountID,accountData}) {
                   )
               }
               </div>
-            ) : <h1 className=' text-center font-bold text-xl h-[40vh] flex justify-center items-center'>
-              <span class="loading loading-spinner text-neutral"></span>
+            ) : <>
+            <Loading/>
 
-            </h1>
+            </>
           }
         </div>
         
@@ -182,7 +188,7 @@ export function Card({ Id, Name, Email, Phone, setDeleteById, deleteById,setEdit
 
 export function AccountDiv({fetchByIdAccountRecord}) {
   return (
-    <div className="AccountDiv my-3">
+<div className={`AccountDiv my-3 dark:bg-cyan-50 bg-slate-200  p-2 rounded-md`}>
       <div className="wrapper-1 ">
 
         <div className="div">

@@ -50,7 +50,7 @@ const authCodeFun=()=>{
 }
 
   return (
-    <div className="relative w-full bg-slate-100">
+    <div className="relative w-full h-[80vh]" >
      
       <div className="relative isolate z-0 px-6 pt-14 lg:px-8">
         <div className="relative mx-auto max-w-2xl py-24">

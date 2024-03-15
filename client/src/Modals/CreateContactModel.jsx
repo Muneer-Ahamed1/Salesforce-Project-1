@@ -9,14 +9,13 @@ export default function NewContactModel() {
   const { accountData, addAccountRecord } = useSelector((state) => state.account);
   const newContactAdded = () => {
     if (Object.keys(contactData).length == 0) {
-      return alert("Please fill something");
+      toast.warn("Please fill something")
     }
     for (let key in contactData) {
       if (contactData[key].length == 0) {
         delete contactData[key];
       }
     }
-    console.log(contactData)
     dispatch(createContactByIdSlice(contactData));
     setContactData({});
     setBtnData(true)
@@ -49,15 +48,15 @@ export default function NewContactModel() {
           setContactData={setContactData}
           accountData={accountData}
         />
-        <div className=" flex gap-2">
+        <div className=" flex  gap-2 justify-end">
         <form method={"dialog"} >
-              <button className="btn  text-white border-0 btn-sm  bg-red-600"
+              <button className="btn  text-white border-0 btn-sm  bg-red-600 rounded-md"
               >Close</button>
               </form>
 
 {(btnData) ?
             <form method={"dialog"} >
-              <button className="btn bg-success text-white border-0 btn-sm "
+              <button className="btn bg-success text-white border-0 btn-sm rounded-md"
                 ref={btnRef}
               >Save</button>
 
@@ -67,9 +66,8 @@ export default function NewContactModel() {
               setBtnData(false);
               e.stopPropagation();
             }}>
-              <button className="btn bg-success text-white border-0 btn-sm " onClick={(e) => {
+              <button className="btn bg-success text-white border-0 btn-sm  rounded-md" onClick={(e) => {
                 e.stopPropagation()
-                console.log("I AM IN NO ASV")
                 newContactAdded();
 
 

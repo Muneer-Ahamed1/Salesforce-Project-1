@@ -20,18 +20,17 @@ export default function DeleteContactModel({ deleteById }) {
       console.log(deleteBool)
       console.log(deleteContext)
       if(deleteBool) {
-      abcDeleteApi(deleteById).then((data)=>{
         toast.warn("Deleted pending")
+
+      abcDeleteApi(deleteById).then((data)=>{
         if(data.status==204) {
           setDeleteContext(true);
           setDeleteBool(false)
           toast.success("Deleted value")
 
 
-          console.log(data);
 
         }
-        console.log(data);
       }).catch((err)=>{
         console.log(err)
         toast.error("Not Deleted")

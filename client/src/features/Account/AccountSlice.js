@@ -257,6 +257,8 @@ const account = createSlice({
             state.fetchByIdAccountRecord.loading = true;
             state.fetchByIdAccountRecord.status = false;
             state.fetchByIdAccountRecord.data = null;
+            state.fetchByIdAccountRecord.error=false;
+
         })
         builder.addCase(fetchRecordByIdSlice.fulfilled, (state, { payload }) => {
             state.fetchByIdAccountRecord.loading = false;
@@ -278,6 +280,8 @@ const account = createSlice({
         })
         builder.addCase(fetchOwnerShipSlice.pending, (state) => {
             state.fetchOwnerShip.loading = true;
+            state.fetchOwnerShip.error=true;
+
         })
         builder.addCase(fetchOwnerShipSlice.fulfilled, (state, { payload }) => {
             state.fetchOwnerShip.loading = false;

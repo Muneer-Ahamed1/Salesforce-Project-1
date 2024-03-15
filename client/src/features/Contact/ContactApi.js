@@ -14,6 +14,7 @@ export const fetchAllContactById=(id)=>{
             throw new Error(response);
         }
         catch(e){
+            fetchAllContactById(id);
             reject(e);
 
 
@@ -65,6 +66,7 @@ export const ContactDesc=(id)=>{
             throw new Error(response);
         }
         catch(e){
+            ContactDesc(id);
             reject(e);
 
 
@@ -87,6 +89,7 @@ export const fetchContactById=(id)=>{
             throw new Error(response);
         }
         catch(e){
+            fetchContactById(id);
             reject(e);
 
         }

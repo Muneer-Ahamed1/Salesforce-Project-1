@@ -21,8 +21,8 @@ function UneditedRecord({fetchOwnerShip}) {
  
 
   return (
-    <div className="uneditedDataAccount">
-<div class="p-4 bg-white md:w-[80%] mx-auto ">
+<div className={`uneditedDataAccount dark: bg-cyan-50 bg-slate-200`}>
+<div class="p-4  md:w-[80%] mx-auto ">
 <h2 class="text-2xl font-bold mb-4">{fetchByIdAccountRecord.data["Name"]}</h2>
 
   <div className=' md:p-8  rounded grid grid-cols-2 justify-center'>
@@ -39,10 +39,7 @@ function UneditedRecord({fetchOwnerShip}) {
         <p class="text-gray-600">Account Number:</p>
         <p>{fetchByIdAccountRecord.data["AccountNumber"]}</p>
       </div>
-    <div class="mb-4">
-      <p class="text-gray-600">Parent Account:</p>
-      <p>{fetchByIdAccountRecord.data["ParentId"]}</p>
-    </div>
+  
     <div class="mb-4">
       <p class="text-gray-600">Rating:</p>
       <p>{fetchByIdAccountRecord.data["Rating"]}</p>

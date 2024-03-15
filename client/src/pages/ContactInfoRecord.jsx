@@ -415,7 +415,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                 />
                             </div>
 
-                            <div className="Mailing-section grid md:grid-cols-2 gap-2">
+                            <div className="Mailing-section grid  gap-2">
 
                                 <div className="section-1">
                                     <div className='Mailing Zip'>
@@ -506,14 +506,14 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                 />
                             </div>
 
-                            <div className="Other-section grid md:grid-cols-2 gap-2">
+                            <div className="Other-section grid gap-2">
 
                                 <div className="section-1">
                                     <div className='Other Zip/Postal Code'>
                                         <div className="label">
                                             <span className="label-text text-slate-700">{result["Other Zip/Postal Code"].label}</span>
                                         </div>
-                                        <input type="text" placeholder="Other Zip" className="input   max-w-xs bg-white border-2 border-slate-200 input-sm rounded-sm"
+                                        <input type="text" placeholder="Other Zip" className="input  mailing-country w-full max-w-xs bg-white border-2 border-slate-200 input-sm rounded-sm"
                                             name={result["Other Zip/Postal Code"].name}
                                             onChange={(e) => {
                                                 setContactData({ ...contactData, [e.target.name]: e.target.value })
@@ -530,7 +530,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                         <div className="label">
                                             <span className="label-text text-slate-700">{result['Other State/Province'].label}</span>
                                         </div>
-                                        <input type="text" placeholder="Other State" className="input  bg-white border-2 border-slate-200 input-sm rounded-sm"
+                                        <input type="text" placeholder="Other State" className="input  mailing-country w-full max-w-xs bg-white border-2 border-slate-200 input-sm rounded-sm"
                                             name={result['Other State/Province'].name}
                                             onChange={(e) => {
                                                 setContactData({ ...contactData, [e.target.name]: e.target.value })

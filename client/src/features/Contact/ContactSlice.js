@@ -199,12 +199,12 @@ const contact=createSlice({
             state.error.error=true;
             state.error.message=payload;
             console.log(payload);
-            toast.error("WrongCredential")
+            toast.error("Bad request")
 
         })
         builder.addCase(updateContactByIdSlice.pending,(state)=>{
             state.updateContactById.loading=true
-            toast.warn("Uploading data")
+            toast.warn("Uploading Contact")
 
         })
         builder.addCase(updateContactByIdSlice.fulfilled,(state,{payload})=>{
@@ -217,7 +217,7 @@ const contact=createSlice({
             state.updateContactById.loading=false;
             state.error.error=true;
             state.error.message=payload;
-            toast.error("Wrong credentials")
+            toast.error("Bad request")
         })
         builder.addCase(abcDeleteSlice.pending,(state)=>{
             state.abcDeleteContact.loading=true;

@@ -32,12 +32,11 @@ function ContactById() {
   useEffect(() => {
     if (deleteBool) {
       abcDeleteApi(deleteBool)
+      
         .then((data) => {
-          toast.warn('Deleted pending');
           if (data.status === 204) {
             setDeleteContext(true);
             setDeleteBool(null);
-            toast.success('Deleted value');
             console.log(data);
           }
         })

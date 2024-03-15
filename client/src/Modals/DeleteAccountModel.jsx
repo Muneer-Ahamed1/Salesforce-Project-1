@@ -7,8 +7,6 @@ export default function DeleteAccountModel({ deleteAccount }) {
     const accountData = useSelector((state) => state.account);
     const[deletData,setDeleteData]=useState(false);
     const deleteAccountFun = (deleteAccount) => {
-      console.log(deleteAccount)
-      console.log("Delete Account");
       dispatch(deleteRecordByIdSlice(deleteAccount));
 
 }

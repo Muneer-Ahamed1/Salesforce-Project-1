@@ -13,7 +13,7 @@ dotenv.config({
     path:path.join(__dirname,"/config.env")
 })
 app.use(cors({
-    origin: true, // Allows all origins
+    origin: true, 
     credentials: true,
 }));
 

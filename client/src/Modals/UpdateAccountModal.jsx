@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {accountUpdateByIdSlice,fetchRecordByIdSlice} from "../features/Account/AccountSlice";
 import AccountInfoRecord from "../pages/AccountInfoRecord";
 import AccountInfoUpdate from "../pages/AccountInfoUpdate";
+import {toast} from "react-toastify"
 
 import { useEffect, useState } from "react";
 import removeNullValues from "../../utils/RemovingNullValues";
@@ -23,7 +24,7 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
          }
       }
       else{
-      alert("Please fill Something");
+        toast.warn("Please Fill Something")
     }
   }
     

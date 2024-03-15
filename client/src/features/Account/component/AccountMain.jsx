@@ -43,119 +43,76 @@ function AccountMain({ accountData,fetchOwnerShip,searchQuery }) {
 
 
   return (
-    <div className="overflow-x-auto">
-                  <ToastContainer />
+   <div className="overflow-x-auto lg: px-10 md :mx-auto">
+  <ToastContainer />
 
-
-      <table className="table table-xs">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Site</th>
-            <th>Phone</th>
-            <th>Owner</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-
-          {
-            (addAccountRecord.status)?(<h1 className=' h-[50vh] w-[100vh] flex justify-center items-center'>
-              <span class="loading loading-spinner text-neutral"></span>
-
-              
-            </h1>):
-
-            accountData && accountData.records.map((account, index) => {
-              const { Name, Site, Phone, Id,OwnerId } = account;
-              if(searchQuery=='') {
-              return (
-                <tr key={Id}>
-                  <th>{index + 1}</th>
-                  <th> <Link className=' text-blue-600 hover:text-blue-400 text-center' to={`/account/record/${Id}`}>{Name}</Link></th>
-                  <th>{Site}</th>
-                  <th>{Phone}</th>
-                  <th>{OwnerShipById(fetchOwnerShip.data.records,OwnerId)}</th>
-                  <div>
-                    <div class="btn-group">
-                      <button type="button" class="px-2 py-1 bg-blue-600 text-white rounded-md " data-bs-toggle="dropdown" aria-expanded="false">
-                        <SlOptions/>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"
-                          onClick={() => {
-                            document.getElementById('my_modal_3').showModal()
-                            fetchIdRecord(Id);
-                            setEditAccountId(Id);
-                          }
-                          }
-                        >Edit </a></li>
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                          onClick={() => {
-                            document.getElementById('my_modal_1').showModal()
-                            setDeleteAccount(Id);
-
-                          }
-                          }
-
-
-                        >Delete </a></li>
-                      </ul>
-                    </div>
+  <table className="table table-xs w-full bg-white shadow-lg rounded-lg overflow ">
+    <thead className="bg-blue-500 text-white">
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Site</th>
+        <th>Phone</th>
+        <th>Owner</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {(addAccountRecord.status) ? (
+        <div>
+          <div className="h-[50vh] w-[100vh] flex justify-center items-center">
+            <span className="loading loading-spinner text-neutral"></span>
+          </div>
+        </div>
+      ) : (
+        accountData && accountData.records.map((account, index) => {
+          const { Name, Site, Phone, Id, OwnerId } = account;
+          if (searchQuery === '' || Name.toLowerCase().includes(searchQuery)) {
+            return (
+              <tr key={Id} className="transition-all hove ">
+                <td>{index + 1}</td>
+                <td>
+                  <Link className="text-blue-600 hover:text-blue-400 text-center" to={`/account/record/${Id}`}>{Name}</Link>
+                </td>
+                <td>{Site}</td>
+                <td>{Phone}</td>
+                <td>{OwnerShipById(fetchOwnerShip.data.records, OwnerId)}</td>
+                <td>
+                  <div className="btn-group">
+                    <button type="button" className="px-2 py-1 bg-blue-600 text-white rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-500" data-bs-toggle="dropdown" aria-expanded="false">
+                      <SlOptions />
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <a className="dropdown-item transition-colors duration-300 ease-in-out hover:bg-blue-100" href="#" onClick={() => {
+                          document.getElementById('my_modal_3').showModal();
+                          fetchIdRecord(Id);
+                          setEditAccountId(Id);
+                        }}>Edit</a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item transition-colors duration-300 ease-in-out hover:bg-red-100" href="#" onClick={() => {
+                          document.getElementById('my_modal_1').showModal();
+                          setDeleteAccount(Id);
+                        }}>Delete</a>
+                      </li>
+                    </ul>
                   </div>
-                </tr>
-              )
-                        }
-                        else{
-                          if(Name.toLowerCase().includes(searchQuery)) {
-                            return (
-                              <tr key={Id}>
-                                <th>{index + 1}</th>
-                                <th> <Link className=' text-blue-600 hover:text-blue-400 text-center' to={`/account/record/${Id}`}>{Name}</Link></th>
-                                <th>{Site}</th>
-                                <th>{Phone}</th>
-                                <th>{OwnerShipById(fetchOwnerShip.data.records,OwnerId)}</th>
-                                <div>
-                                  <div class="btn-group">
-                                    <button type="button" class="px-2 py-1 bg-blue-600 text-white rounded-md " data-bs-toggle="dropdown" aria-expanded="false">
-                                      <SlOptions/>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li><a class="dropdown-item" href="#"
-                                        onClick={() => {
-                                          document.getElementById('my_modal_3').showModal()
-                                          fetchIdRecord(Id);
-                                          setEditAccountId(Id);
-                                        }
-                                        }
-                                      >Edit </a></li>
-                                      <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                        onClick={() => {
-                                          document.getElementById('my_modal_1').showModal()
-                                          setDeleteAccount(Id);
-              
-                                        }
-                                        }
-              
-              
-                                      >Delete </a></li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </tr>
-                            )
-                          }
-                        }
-            })
+                </td>
+              </tr>
+            );
           }
-        </tbody>
-        <DeleteAccountModel deleteAccount={deleteAccount} />
-        <NewAccountModel />
-        <UpdateAccountModal id={EditAccountId} setEditAccountId={setEditAccountId} />
+          return null; // If search query does not match, return null
+        })
+      )}
+    </tbody>
+  </table>
+  <DeleteAccountModel deleteAccount={deleteAccount} />
+  <NewAccountModel />
+  <UpdateAccountModal id={EditAccountId} setEditAccountId={setEditAccountId} />
+</div>
 
-      </table>
-    </div>
+
   )
 }
 

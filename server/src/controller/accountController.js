@@ -87,7 +87,10 @@ const fetchAllSalesforceRecordDataController = async (req, res, next) => {
 
 
 const fetchDataByIdSalesforceRecordController = async (req, res, next) => {
-    try {
+
+    try 
+    {
+        console.log("I AM INSIDE")
         const { authorization, instance_url } = req.headers;
 
         if (!authorization) {

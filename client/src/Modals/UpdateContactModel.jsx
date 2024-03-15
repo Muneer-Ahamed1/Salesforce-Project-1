@@ -19,7 +19,6 @@ export default function UpdateContactModel({ setEditById, editById }) {
     if (editById) {
       dispatch(resetData());
 
-      alert(editById);
 
       dispatch(ContactByIdSlice(editById));
     }

@@ -1,5 +1,7 @@
+import { useDispatch } from "react-redux";
 import instance from "../../../utils/Proxy";
-export const fetchAllRecordApi = () => {
+export const fetchAllRecordApi = (count=0) => {
+    const MAX_COUNT=3;
     return new Promise(async (resolve, reject) => {
         try {
             const fetchAccountData = await instance.get("/accountObject/getAllData", {
@@ -9,10 +11,13 @@ export const fetchAllRecordApi = () => {
                     "instance_url": `${sessionStorage.getItem("instance_url")}`
                 }
             })
-            resolve(fetchAccountData);
+            return resolve(fetchAccountData);
 
         }
         catch (e) {
+            if(count<MAX_COUNT) {
+            fetchAllRecordApi(++count);
+            }
             reject(e);
 
         }
@@ -64,6 +69,7 @@ export const createRecordApi = (data) => {
             throw new Error(response);
         }
         catch (e) {
+
             console.log(e);
 
             reject(e.response?.data);
@@ -72,7 +78,8 @@ export const createRecordApi = (data) => {
 
 }
 
-export const fetchRecordApiByIdApi = (id) => {
+export const fetchRecordApiByIdApi = (id,count=0) => {
+const MAX_COUNT = 3;
     return new Promise(async (resolve, reject) => {
         try {
             const response = await instance.get(`/accountObject/record/${id}`, {
@@ -88,7 +95,12 @@ export const fetchRecordApiByIdApi = (id) => {
             throw new Error(response);
         }
         catch (e) {
-            reject(e);
+
+            console.log(e);
+            if(count<MAX_COUNT){
+            fetchRecordApiByIdApi(id,++count);
+             } 
+             return reject(e);
 
         }
     })
@@ -106,7 +118,7 @@ export const updateRecordById = (id, data) => {
 
 
             if (response.status === 200) {
-                resolve(response.data);
+               return resolve(response.data);
             } else {
                 throw new Error(response);
             }
@@ -116,7 +128,8 @@ export const updateRecordById = (id, data) => {
     });
 };
 
-export const templateAccountApi = () => {
+export const templateAccountApi = (count=0) => {
+
     return (new Promise(async (resolve, reject) => {
         try {
             const response = await instance.get(`/accountObject/describe`, {
@@ -133,12 +146,17 @@ export const templateAccountApi = () => {
             throw new Error('Network error');
         }
         catch (e) {
+            templateAccountApi(++count);
+            
             reject(e);
         }
     }))
 }
 
-export const ownerShipApi = () => {
+export const ownerShipApi = (count=0) => 
+{
+    const MAX_COUNT=3;
+
     return (new Promise(async (resolve, reject) => {
         
         try{
@@ -149,13 +167,15 @@ export const ownerShipApi = () => {
                 "instance_url": `${sessionStorage.getItem("instance_url")}`
             }
         })
-        console.log(response);
         if (response.status == 200) {
             return resolve(response);
         }
         throw new Error(response);
         }
     catch (e) {
+        if(count<MAX_COUNT) {
+        ownerShipApi(++count);
+        }
         reject(e);
 
     }

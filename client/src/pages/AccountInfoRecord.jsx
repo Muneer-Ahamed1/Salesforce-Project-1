@@ -24,9 +24,8 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
     const result = describeDataModifying(accountDescribe);
 
     if (!AccountData) {
-        return <h1>{"ACCOUNT DATA IS NULL"}</h1>
+        return <Loading/>
     }
-    console.log("Resdsddsdas")
     console.log(result)
     
     return (
