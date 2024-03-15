@@ -22,24 +22,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// if (process.env.NODE_ENV === "developnment") {
-//     app.use(morgan("dev"));
-// }
-// if (process.env.NODE_ENV === "production") {
-//   console.log("i am inside")
-//   app.use(express.static(path.join("b")));
-
-//   app.get("/", (req, res) =>
-//     res.sendFile(
-//       path.resolve("dist", "index.html")
-//     )
-//   );
+ if (process.env.NODE_ENV === "developnment") {
+     app.use(morgan("dev"));
+ }
+ if (process.env.NODE_ENV === "production") {
+   console.log("i am inside")
+   app.use(express.static(path.join(__dirname, "../client/build")))
+   app.get("/", (req, res) =>
+     res.sendFile(
+      path.resolve(__dirname, "../", "client", "build", "index.html" )
+   ));
 
   
 
-//   } else {
-//     app.get("/", (req, res) => res.send("Please set to production"));
-//   }
+   } else {
+     app.get("/", (req, res) => res.send("Please set to production"));
+   }
 
 
 app.use("/",loginRoute);
