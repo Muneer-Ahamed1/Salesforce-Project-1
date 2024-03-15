@@ -25,6 +25,21 @@ app.use(cookieParser());
 if (process.env.NODE_ENV === "developnment") {
     app.use(morgan("dev"));
 }
+if (process.env.NODE_ENV === "production") {
+  console.log("i am inside")
+    app.use(express.static("dist"));
+    app.get("/", (req, res) =>
+    res.sendFile(
+      path.resolve(__dirname, "dist", "index.html")
+    )
+  );
+  
+
+  } else {
+    app.get("/", (req, res) => res.send("Please set to production"));
+  }
+
+
 app.use("/",loginRoute);
 app.use("/accountObject", accountRoute);
 app.use("/contactObject",contactRoute)
@@ -33,7 +48,10 @@ app.use("*",(req,res)=>{
     
 })
 const port = process.env.PORT || 8080;
-app.use(errorController);
+
+
+  
+  app.use(errorController);
 
 app.listen(port, () => {
     console.log("listening on " + port);
