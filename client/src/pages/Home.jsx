@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {loginUserSlice} from "../features/Auth/AuthSlice";
 import { useDispatch,useSelector } from 'react-redux';
+import Loading from './Loading';
 
 const menuItems = [
   
@@ -12,46 +13,53 @@ const menuItems = [
 
 export default function HeroThree() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const [isBool,setIsBool]=useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
   const dispatch = useDispatch();
     const auth = useSelector((state) => state.auth);
+    const {loading}=useSelector((state)=>state.auth);
     const account = useSelector((state) => state.account);
+    const [urlCode,setUrlCode]=useState(null);
     const isLogin=auth.isLogin.login;
     const navigate=useNavigate();
-    console.log(auth);
-    useEffect(() => {
-        if (!auth.isLogin.login) {
-            const url_code = new URLSearchParams(window.location.search).get('code');
-            if(url_code){
-            console.log(url_code);
-            dispatch(loginUserSlice(url_code));
-            }
-        }
+     console.log(auth);
+     useEffect(() => {
+         if (!auth.isLogin.login) {
+             const url_code = new URLSearchParams(window.location.search).get('code');
+             if(url_code){
+             console.log(url_code);
+             setUrlCode(url_code);
+             dispatch(loginUserSlice(url_code));
+             }
+         }
+
        
-    }, [])
+     }, [])
 
-    useEffect(()=>{
-        if(isLogin) {
-            navigate("/accountPage");
-        }
-        if(auth.error.error) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            localStorage.removeItem("instance_url");
-            navigate("/");
-        }
+    //  useEffect(()=>{
+    //      if(isLogin) {
+    //          navigate("/accountPage");
+    //      }
+    //      if(auth.error.error) {
+    //          localStorage.removeItem("access_token");
+    //          localStorage.removeItem("refresh_token");
+    //          localStorage.removeItem("instance_url");
+    //          navigate("/");
+    //      }
 
-    },[isLogin])
+    //  },[isLogin])
 const authCodeFun=()=>{
-    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=https://salesforce-project-1-9k23.vercel.app&response_type=code`
+    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=http://localhost:5173/MiddlePage&response_type=code`
 }
+console.log(urlCode)
 
   return (
     <div className="relative w-full h-[80vh]" >
-     
+      {
+     (!loading )?
       <div className="relative isolate z-0 px-6 pt-14 lg:px-8">
         <div className="relative mx-auto max-w-2xl py-24">
           <div className="absolute inset-x-0 -top-[4rem] -z-10 transform-gpu overflow-hidden blur-3xl md:-top-[10rem]">
@@ -93,21 +101,18 @@ const authCodeFun=()=>{
              "": <button
              type="button"
              className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-             onClick={()=>authCodeFun()}
+             onClick={()=>{
+              setIsBool(true);
+              authCodeFun()}}
            >
              Login
            </button>
 }
-              <a
-                href='https://github.com/Muneer-Ahamed1/Salesforce-Project-1'
-                className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              >
-                Source Code
-              </a>
             </div>
           </div>
         </div>
-      </div>
+      </div>:<Loading/>
+}
     </div>
   )
 }

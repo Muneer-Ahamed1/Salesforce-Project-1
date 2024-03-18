@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import AuthReducer from "./features/Auth/AuthSlice";
 import AccountReducer from "./features/Account/AccountSlice";
 import ContactReducer from "./features/Contact/ContactSlice";
+import RedumReducer from "./features/Redum/DeleteSlice";
 
 
 const Store=configureStore({
@@ -9,6 +10,7 @@ const Store=configureStore({
         auth:AuthReducer,
         account:AccountReducer,
         contact:ContactReducer,
+        redum:RedumReducer
         
     }
 })

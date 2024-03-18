@@ -2,15 +2,16 @@
 import { useDispatch,useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
 import {abcDeleteApi} from "../features/Auth/AuthApi";
-import {abcDeleteSliceAuthSlice} from "../features/Auth/AuthSlice"
 import {toast} from "react-toastify"
-
+// import {deleteRedumSlice} from "../features/Redum/DeleteSlice";
+import {resetLoading} from "../features/Contact/ContactSlice"
 import {MyDeleteContext} from "../ContextApi/DeleteContext"
-
+import {deleteRedumSlice} from "../features/Contact/ContactSlice";
 export default function DeleteContactModel({ deleteById }) {
     const dispatch = useDispatch();
     const contactData = useSelector((state) => state.contact);
     const[deleteBool,setDeleteBool]=useState(false);
+    
     const { deleteContext, setDeleteContext } = useContext(MyDeleteContext);
   
     
@@ -64,7 +65,10 @@ export default function DeleteContactModel({ deleteById }) {
             <form method="dialog" >
               {/* if there is a button in form, it will close the modal */}
               <button className="btn border-0 mx-4 bg-red-600 text-white rounded-md btn-sm"
-                onClick={() => setDeleteBool(true)}
+                onClick={() => {
+                  dispatch(deleteRedumSlice(deleteById));
+                  // dispatch(resetLoading());
+                }}
               >Delete</button>
   
               <button className="btn bg-blue-600 border-0 text-white btn-sm rounded-md">Close</button>

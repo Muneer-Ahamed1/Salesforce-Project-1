@@ -9,46 +9,33 @@ import Loading from '../../../pages/Loading';
 import { MyDeleteContext } from '../../../ContextApi/DeleteContext';
 import { useContext } from 'react';
 import { abcDeleteApi } from '../../Auth/AuthApi';
+import { resetDelete } from '../../Redum/DeleteSlice';
+import { deleteRedumSlice } from "../../Redum/DeleteSlice";
 
 function ContactById() {
-  const { contactData, updateContactById } = useSelector((state) => state.contact);
+  const { contactData, updateContactById, loading, deleteRedum } = useSelector((state) => state.contact);
   const { id } = useParams();
   const [deleteById, setDeleteById] = useState(null); // Initialize state with 'null' instead of undefined
   const [editById, setEditById] = useState(null); // Initialize state with 'null' instead of undefined
-  const [deleteBool, setDeleteBool] = useState(null);
-  const { deleteContext, setDeleteContext } = useContext(MyDeleteContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!contactData.data || updateContactById.status || deleteContext) {
+    if (updateContactById.status || deleteRedum.status) {
+      console.log(id);
       dispatch(fetchContactByIdSlice(id));
-      setDeleteContext(false);
-      setDeleteBool(null);
+
 
     }
-   
-  }, [id, deleteContext, updateContactById.status, contactData.data]); 
+  }, [updateContactById, deleteRedum]);
 
   useEffect(() => {
-    if (deleteBool) {
-      abcDeleteApi(deleteBool)
-      
-        .then((data) => {
-          if (data.status === 204) {
-            setDeleteContext(true);
-            setDeleteBool(null);
-            console.log(data);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          setDeleteContext(false);
-        })
-        .finally(() => {
-          setDeleteBool(null); // Move 'setDeleteBool(null)' inside 'finally' block
-        });
-    } 
-  }, [deleteBool, deleteContext]);
+    if (id && !contactData.data) {
+      dispatch(fetchContactByIdSlice(id));
+
+    }
+  }, [id])
+
+
 
   if (!contactData.data) {
     return <Loading />;
@@ -70,8 +57,8 @@ function ContactById() {
             </tr>
           </thead>
           <tbody>
-            {contactData.data &&
-              contactData.data.totalSize > 0 &&
+            {!loading && contactData.data &&
+              contactData.data.totalSize > 0 ?
               contactData.data.records.map((vl, index) => {
                 const { Name, Email, Phone, Id } = vl;
                 return (
@@ -93,7 +80,7 @@ function ContactById() {
                         <ul className="dropdown-menu">
                           <li>
                             <a
-                              className="dropdown-item"
+                              className="dropdown-item hover:bg-blue-100"
                               href="#"
                               onClick={() => {
                                 document.getElementById('my_modal_15').showModal();
@@ -105,12 +92,12 @@ function ContactById() {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item"
+                              className="dropdown-item hover:bg-red-100"
                               data-bs-toggle="modal"
                               data-bs-target="#exampleModal"
                               onClick={() => {
                                 document.getElementById('my_modal_7').showModal();
-                                setDeleteBool(Id);
+                                setDeleteById(Id);
                               }}
                             >
                               Delete
@@ -121,18 +108,13 @@ function ContactById() {
                     </td>
                   </tr>
                 );
-              })}
+              })
+
+              : ""
+            }
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>Contact Name</th>
-              <th>Title</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th></th>
-            </tr>
-          </tfoot>
+         
+
         </table>
       </div>
       <DeleteContactModel deleteById={deleteById} />

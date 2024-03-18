@@ -12,6 +12,7 @@ const createSalesforceContact = async (req, res, next) => {
         }
         console.log(authorization)
         console.log(instance_url) 
+        console.log(req.body);
 
         const response = await axios.post(
             `${instance_url}/services/data/v35.0/sobjects/Contact`,req.body,{
@@ -176,8 +177,8 @@ const deleteByIdContact = async (req, res, next) => {
     try {
         const { authorization, instance_url } = req.headers;
         const {id}=req.params;
-        
-        console.log(req.body)
+        console.log("DELETED CONTROLLER")
+        console.log(id)
         if (!authorization) {
             return res.status(401).json({ error: "Authorization header is missing" });
         }

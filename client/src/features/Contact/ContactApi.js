@@ -14,7 +14,7 @@ export const fetchAllContactById=(id)=>{
             throw new Error(response);
         }
         catch(e){
-            fetchAllContactById(id);
+            console.log("I AM INSIDE FetchAll COntact Id")
             reject(e);
 
 

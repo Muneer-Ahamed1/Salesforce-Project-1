@@ -28,18 +28,15 @@ function AccountMain({ accountData,fetchOwnerShip,searchQuery }) {
     dispatch(fetchRecordByIdSlice(id));
 
   }
-  
+   useEffect(()=>{
+     if(!accountData)
+ {
+   dispatch(fetchAllAccountRecordsSlice());
+ }
+   },[accountData])
 
 
-  useEffect(()=>{
-    if(addAccountRecord.status || accountUpdateData.status) {
-      
-      dispatch(fetchAllAccountRecordsSlice());
-      dispatch(resetData());
-
-    }
-
-  },[addAccountRecord.status,dispatch,accountUpdateData.status])
+ 
 
 
   return (

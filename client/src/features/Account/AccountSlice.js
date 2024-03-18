@@ -179,12 +179,10 @@ const account = createSlice({
         })
         builder.addCase(deleteRecordByIdSlice.pending, (state) => {
             state.loading = true;
-            toast.warn("pending account delete")
 
         })
         builder.addCase(deleteRecordByIdSlice.fulfilled, (state, { payload }) => {
             state.deleteAccount.status = true;
-            state.loading = false;
             state.error.error=false;
             state.error.message=null;
             toast.success("account is deleted successfully")
@@ -227,7 +225,6 @@ const account = createSlice({
             state.error.message = null;
             state.addAccountRecord.status = false;
             state.addAccountRecord.message = null;
-            toast.warn("pending create account")
 
             
         })
@@ -235,7 +232,6 @@ const account = createSlice({
 
 
         builder.addCase(createRecordApiSlice.fulfilled, (state, { payload }) => {
-            state.loading = false;
             state.error.error = false;
             state.error.message = null;
             state.addAccountRecord.status = true;
@@ -247,6 +243,7 @@ const account = createSlice({
         })
         builder.addCase(createRecordApiSlice.rejected, (state, { payload }) => {
             state.error.error = true;
+            state.loading=false;
             state.error.message = payload;
             state.addAccountRecord.status = false;
             state.addAccountRecord.message = null;
@@ -298,8 +295,8 @@ const account = createSlice({
             state.error.message = payload;
         })
         builder.addCase(accountUpdateByIdSlice.pending, (state) => {
+            state.loading=true
             state.accountUpdateData.loading = true;
-            toast.warn("update is in pending")
         })
         builder.addCase(accountUpdateByIdSlice.fulfilled, (state, { payload }) => {
             state.accountUpdateData.loading = false;
@@ -311,6 +308,7 @@ const account = createSlice({
 
         })
         builder.addCase(accountUpdateByIdSlice.rejected, (state, { payload }) => {
+            state.loading=false
             state.accountUpdateData.loading = false;
             state.accountUpdateData.status = false;
             state.accountUpdateData.message = null;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { fetchAllAccountRecordsSlice } from "../features/Account/AccountSlice";
+import { fetchAllAccountRecordsSlice,resetData } from "../features/Account/AccountSlice";
 import { FaPlus } from "react-icons/fa";
 import { motion } from 'framer-motion'
-
+import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import AccountMain from '../features/Account/component/AccountMain';
@@ -14,6 +14,8 @@ import Loading from './Loading';
 function AccountPage() {
     const dispatch = useDispatch();
     const accountData = useSelector((state) => state.account);
+    const {addAccountRecord,accountUpdateData}=useSelector((state)=>state.account);
+    const {loading}=useSelector((state)=>state.account)
     const accountDeleted = accountData.deleteAccount;
     const newAccountRecord = accountData.addAccountRecord;
     const { fetchOwnerShip } = OwnerShip();
@@ -23,8 +25,14 @@ function AccountPage() {
 
     }
     useEffect(()=>{
-        localStorage.setItem("data-theme","light")
-    },[localStorage])
+        if(addAccountRecord.status || accountUpdateData.status) {
+          
+          dispatch(fetchAllAccountRecordsSlice());
+           dispatch(resetData());
+    
+        }
+    
+      },[addAccountRecord.status,dispatch,accountUpdateData.status]) 
 
 
     useEffect(() => {
@@ -35,7 +43,13 @@ function AccountPage() {
     const {error}=useSelector((state)=>state.account);
  
     console.log(accountData);
+    const auth = useSelector((state) => state.auth);
+    const account = useSelector((state) => state.account);
 
+    
+   if(loading) {
+    return <Loading/>
+   }
     if (accountData.accountData && fetchOwnerShip.data) {
         return <div className=' sm:p-2'>
             {(!accountData.data) ?

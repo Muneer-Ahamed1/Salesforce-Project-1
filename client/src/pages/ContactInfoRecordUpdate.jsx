@@ -1,39 +1,94 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { ContactDescSlice } from "../features/Contact/ContactSlice"
 import { useDispatch, useSelector } from 'react-redux'
 import { describeDataModifying } from "./AccountInfoRecord";
-import {updateContactByIdSlice,} from "../features/Contact/ContactSlice";
+import { updateContactByIdSlice, } from "../features/Contact/ContactSlice";
 import OwnerShip from '../features/Account/component/OwnerShip';
 import OwnerShipById from '../features/Account/component/OwnerShipById';
 
-export default function ContactInfoRecordUpdate({ data, accountData,updateContact,fetchOwnerShip }) {
+export default function ContactInfoRecordUpdate({ data, accountData, updateContact, fetchOwnerShip }) {
     const dispatch = useDispatch();
     const [contactData, setContactData] = useState(data);
-    const { descContact,updateContactById } = useSelector((state) => state.contact);
-    const contactInfo=useSelector((state) => state.contact.contactData);
-    const {OwnerShip}=useSelector((state)=>state.account);
+    const { descContact, updateContactById } = useSelector((state) => state.contact);
+    const contactInfo = useSelector((state) => state.contact.contactData);
+    const { OwnerShip } = useSelector((state) => state.account);
+    const defaultTemplate = {
+        "error": false,
+        "LastName": null,
+        "Email": null,
+        "Salutation": null
+
+    }
+    const [errorValidation, setErrorValidation] = useState(defaultTemplate);
+
+
+
+    const validationField = (name, value, setErrorValidation) => {
+        const updatedErrorValidation = { ...errorValidation }; // Create a copy of the current state
+
+        switch (name) {
+            case 'Email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValidEmail = emailRegex.test(value);
+
+                if (!isValidEmail) {
+                    // Update error state for Email field
+                    updatedErrorValidation.error = true
+                    updatedErrorValidation["Email"] = "Please provide valid email address"
+                    setErrorValidation(updatedErrorValidation);
+
+                }
+
+                break;
+            case 'Phone':
+                const phoneRegex = /^(\+\d{1,3}\s?)?(\(\d{1,4}\))?[\s.-]?\d{3,4}[\s.-]?\d{3,4}$/;
+                const isValid = "";
+
+        }
+
+        // Update the state with the new error validation
+    };
+
+    useEffect(() => {
+        setErrorValidation(errorValidation);
+    }, [errorValidation])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         if (!descContact.data) {
             dispatch(ContactDescSlice());
         }
     }, [])
-    useEffect(()=>{
-        if(contactInfo.data){
+    useEffect(() => {
+        if (contactInfo.data) {
 
         }
-    },[contactInfo.data])
-    if (!descContact.data ) {
+    }, [contactInfo.data])
+    if (!descContact.data) {
         return <h1>Loading descContact</h1>
     }
     const result = describeDataModifying(descContact);
-    useEffect(()=>{
+    useEffect(() => {
 
-    },[])
+    }, [])
 
     const [btnInfo, setBtnInfo] = useState(false);
     const btnRef = useRef();
 
-   
+
     useEffect(() => {
         if (btnInfo) {
 
@@ -42,11 +97,13 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
         }
 
     }, [btnInfo])
-    useEffect(()=>{
-        if(updateContactById.status) {
-            setBtnInfo(true);
+    useEffect(() => {
+        if (updateContactById.status) {
         }
-    },[updateContactById.status])
+    }, [updateContactById.status])
+    console.log(" I AM HEREDSDS")
+    console.log(errorValidation);
+
 
 
     return (
@@ -67,12 +124,12 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className=' Name'>
                                 <div className="label">
-                                    <span className="label-text text-slate-700">Name *</span>
+                                    <span className="label-text text-slate-700 font-bold">Name *</span>
                                 </div>
                                 <div className=' Name-part border-2 p-2 rounded-md'>
                                     <div className="div">
                                         <div className="label">
-                                            <div className="label-text text-slate-700">
+                                            <div className="label-text text-slate-700 font-bold">
                                                 {
                                                     result["Salutation"].label
                                                 }
@@ -82,6 +139,11 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                             name={result["Salutation"].name}
                                             onChange={(e) => {
                                                 setContactData({ ...contactData, [e.target.name]: e.target.value })
+                                                if (e.target.value.length > 0) {
+                                                    errorValidation.error=false;
+                                                    errorValidation["Salutation"]=null;
+                                                    
+                                                }
 
                                             }}
                                             value={(contactData[result['Salutation'].name]) ? contactData[result['Salutation'].name] : ""}
@@ -97,10 +159,12 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                                 })
                                             }
                                         </select>
+                                        <p className=' text-red-600'>{errorValidation["Salutation"]?"Plese Enter a valid Salutation" :""}</p>
+
                                     </div>
                                     <div className="div">
                                         <div className="label">
-                                            <div className="label-text text-slate-700">
+                                            <div className="label-text text-slate-700 font-bold">
                                                 {
                                                     result["First Name"].label
                                                 }
@@ -116,7 +180,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                     </div>
                                     <div className="div">
                                         <div className="label">
-                                            <div className="label-text text-slate-700">
+                                            <div className="label-text text-slate-700 font-bold">
                                                 {
                                                     result["Last Name"].label
                                                 }
@@ -127,8 +191,17 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                             value={(contactData[result['Last Name'].name]) ? contactData[result['Last Name'].name] : ""}
                                             onChange={(e) => {
                                                 setContactData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-                                            }}
+                                                if (e.target.value.length > 0) {
+                                                    errorValidation[e.target.name]=null
+                                                    errorValidation.error=false;
+
+                                                }
+
+                                            }
+
+                                            }
                                         />
+                                        <p className=' text-red-600'>{errorValidation["LastName"]?"This field is required" :""}</p>
                                     </div>
 
 
@@ -139,7 +212,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
 
                             <div className="AccountName">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             "Account Name"
                                         }
@@ -171,7 +244,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
 
                             <div className="Title">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Title"]?.label
                                         }
@@ -188,7 +261,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Department">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Department"]?.label || "Department"
                                         }
@@ -205,7 +278,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Birthdate">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Birthdate"]?.label || "Birthdate"
                                         }
@@ -252,7 +325,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div> */}
                             <div className="Lead Source">
                                 <div className="label block">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Lead Source"]?.label || "Reports To"
                                         }
@@ -286,7 +359,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                         <div className="part-2">
                             <div className="Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Phone"]?.label || "Phone"
                                         }
@@ -305,7 +378,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Home Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Home Phone"]?.label || "Title"
                                         }
@@ -322,7 +395,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Mobile">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Mobile"]?.label || "Mobile"
                                         }
@@ -338,7 +411,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Other Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Other Phone"]?.label
                                         }
@@ -356,7 +429,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             <div className="Fax
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-70 font-bold0">
                                         {
                                             result["Fax"]?.label || "Fax"
                                         }
@@ -374,7 +447,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             <div className="Email
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Email"]?.label
                                         }
@@ -385,14 +458,25 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                                     value={(contactData[result['Email']?.name]) ? contactData[result['Email']?.name] : ""}
                                     onChange={(e) => {
                                         setContactData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+                                        console.log(e.target.name)
+                                        console.log(errorValidation)
+                                        let dump = { ...errorValidation }
+
+                                        if (e.target.value.length > 0) {
+                                         dump.error=false;
+                                         dump["Email"]=null;
+                                         setErrorValidation(dump)
+                                        }
                                     }}
                                 />
+                                <p className=' text-red-600'>{errorValidation["Email"]?"Email is provided":""}</p>
+
 
                             </div>
                             <div className="Assistant
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Assistant"]?.label || "Assistant"
                                         }
@@ -409,7 +493,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Asst. Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Asst. Phone"]?.label
                                         }
@@ -622,7 +706,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                         <div className="wrapper grid md:grid-cols-2 sm:gap-2 md:gap-4">
                             <div className="Languages">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Languages"]?.label || "Languages"
                                         }
@@ -639,7 +723,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                             </div>
                             <div className="Level">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Level"].label
                                         }
@@ -673,7 +757,7 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
 
                 </div>
                 <div className="section-4 mt-2">
-                    <h1 className=' bg-gray-300'>Description Information</h1>
+                    <h1 className=' bg-gray-300 font-bold'>Description Information</h1>
                     <div className="Level">
                         <div className="label">
                             <div className="label-text text-slate-700">
@@ -706,55 +790,82 @@ export default function ContactInfoRecordUpdate({ data, accountData,updateContac
                     >Close</button>
                 </form>
                 {(btnInfo) ?
-                        <form method={"dialog"} >
-                            <button className="btn bg-success text-white border-0 btn-sm "
-                                ref={btnRef}
-                                onClick={()=>{console.log("I AM BTN_1")
-                            console.log(btnInfo);
+                    <form method={"dialog"} >
+                        <button className="btn bg-success text-white border-0 btn-sm "
+                            ref={btnRef}
+                            onClick={() => {
+                                console.log("I AM BTN_1")
+                                console.log(btnInfo);
                             }}
 
 
-                            >Save</button>
+                        >Save</button>
 
-                        </form> :
-                <div onClick={(e) => e.stopPropagation()}>
-                    <button className="btn bg-success text-white border-0 btn-sm " onClick={() => {
-                        const dumpData = {};
-                        for (const key in contactData) {
-                            if (contactData[key] != null) {
-                                dumpData[key] = contactData[key];
+                    </form> :
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <button className="btn bg-success text-white border-0 btn-sm " onClick={() => {
+                            const dumpData = {};
+                            for (const key in contactData) {
+                                if (contactData[key] != null) {
+                                    dumpData[key] = contactData[key];
+
+                                }
+                            }
+                            delete dumpData["attributes"];
+                            delete dumpData["CleanStatus"];
+                            delete dumpData["CreatedById"];
+                            delete dumpData["CreatedDate"];
+                            delete dumpData["IsDeleted"];
+                            delete dumpData["LastModifiedById"];
+                            delete dumpData["LastModifiedDate"];
+                            delete dumpData["LastReferencedDate"];
+                            delete dumpData["LastViewedDate"];
+                            delete dumpData["OwnerId"];
+                            delete dumpData["PhotoUrl"];
+                            delete dumpData["SystemModstamp"];
+                            if (dumpData["MailingAddress"]) {
+                                delete dumpData["MailingAddress"];
+                            }
+                            if (dumpData["OtherAddress"]) {
+                                delete dumpData["OtherAddress"];
+                            }
+                            console.log(dumpData);
+                            console.log("---------------------------------")
+                            console.log(contactData);
+                            // updateAccountAdded(dumpData);
+                            let dumpValidation = { ...errorValidation };
+
+
+                            if (!contactData.hasOwnProperty('LastName') || contactData['LastName'].length == 0) {
+                                dumpValidation.error=true
+                                dumpValidation["LastName"] = "Please give LastName"
+                            }
+                            if (!contactData.hasOwnProperty('Salutation') || contactData['Salutation'].length == 0) {
+                                dumpValidation.error=true
+                                dumpValidation["Salutation"] = "Salutation is required"
 
                             }
-                        }
-                         delete dumpData["attributes"];
-                         delete dumpData["CleanStatus"];
-                         delete dumpData["CreatedById"];
-                         delete dumpData["CreatedDate"];
-                         delete dumpData["IsDeleted"];
-                         delete dumpData["LastModifiedById"];
-                         delete dumpData["LastModifiedDate"];
-                         delete dumpData["LastReferencedDate"];
-                         delete dumpData["LastViewedDate"];
-                         delete dumpData["OwnerId"];
-                         delete dumpData["PhotoUrl"];
-                         delete dumpData["SystemModstamp"];
-                         if (dumpData["MailingAddress"]) {
-                             delete dumpData["MailingAddress"];
-                         }
-                         if (dumpData["OtherAddress"]) {
-                             delete dumpData["OtherAddress"];
-                         }
-                        console.log(dumpData);
-                        console.log("---------------------------------")
-                        console.log(contactData);
-                        // updateAccountAdded(dumpData);
-                        updateContact(dumpData,dumpData.Id)
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if(contactData["Email"] && !emailRegex.test(contactData["Email"])) {
+                                dumpValidation.error=true
+                                dumpValidation["Email"]="Please provide a valid email address";
+
+                            }
+                            setErrorValidation(dumpValidation);
+
+                            console.log(dumpValidation);
 
 
-                    }}>Save</button>
+                        
+                              if (!dumpValidation.error) {
 
-                </div>
-}
+                                 updateContact(dumpData, dumpData.Id, setBtnInfo)
+                              }
+
+                        }}>Save</button>
+
+                    </div>
+                }
             </div>
         </div>
     )

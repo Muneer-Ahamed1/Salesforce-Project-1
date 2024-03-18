@@ -19,8 +19,10 @@ export default function UpdateAccountModal({id,setEditAccountId}) {
       console.log(AccountData)
       if(Object.keys(AccountData).length>0) {
          dispatch(accountUpdateByIdSlice({id:id,data:AccountData}));
-         if(accountUpdateData.status){
          setBtnInfo(true);
+         if(accountUpdateData.status){
+          console.log("I AM INSIDE UPDATE ACCOUND ADD")
+  
          }
       }
       else{

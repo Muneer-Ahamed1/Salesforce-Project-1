@@ -12,6 +12,8 @@ import ContactPage from './pages/ContactPage.jsx';
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import AccountById from './pages/AccountById.jsx';
 import ContactById from './features/Contact/component/ContactById.jsx';
+import FormValidation from "./ContextApi/FormValidation.jsx"
+import MiddlePage from "./pages/MiddlePage.jsx"
 
 const router = createBrowserRouter(
   [
@@ -28,9 +30,13 @@ const router = createBrowserRouter(
         {
           path: "/AccountPage",
           element: (
-            <ProtectedRoute>
               <AccountTable />
-            </ProtectedRoute>
+          )
+        },
+        {
+          path:"/MiddlePage",
+          element:(
+            <MiddlePage/>
           )
         },
         {
@@ -63,7 +69,9 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={Store}>
+    <FormValidation>
     <RouterProvider router={router} />
+    </FormValidation>
   </Provider>
 
 )

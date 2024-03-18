@@ -1,22 +1,28 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { templateAccountSlice, resetError } from "../features/Account/AccountSlice";
 import Loading from './Loading';
+import {FormValidationContext} from "../ContextApi/FormValidation"
 
-function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
+import { useForm } from 'react-hook-form';
+
+
+function AccountInfoRecord({ AccountData, setAccountData, accountData, }) {
     console.log(AccountData);
     const dispatch = useDispatch();
-    const { error } = useSelector((state) => state.account);
     const accountDescribe = useSelector((state) => state.account.accountDescribe);
+    const {errorHandler,setErrorHandler}=useContext(FormValidationContext);
+    
+    
 
     useEffect(() => {
         if (!accountDescribe.data) {
             dispatch(templateAccountSlice());
         }
 
-
     }, [])
-    console.log(accountDescribe.data);
+  
+
     if (!accountDescribe.data) {
         return <Loading />
     }
@@ -24,10 +30,12 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
     const result = describeDataModifying(accountDescribe);
 
     if (!AccountData) {
-        return <Loading/>
+        return <Loading />
     }
-    console.log(result)
-    
+    console.log("I AM INSIDE ACCOUNT INFO RECORD")
+    console.log(errorHandler);
+
+
     return (
         <>
             <form className='formData flex flex-col' onSubmit={(e) => e.preventDefault}>
@@ -38,24 +46,38 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='name'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Name"].label}*</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Name"].label}*</span>
                             </div>
-                            <input type="text" placeholder="Account Name" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm" required
-                                name={"Name"}
+                            <input
+                                type="text"
+                                placeholder="Account Name"
+                                className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
+                                name="Name" // <-- Change to string without curly braces
                                 onChange={(e) => {
                                     console.log("ddfssss===" + e.target.value);
                                     setAccountData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+                                    errorHandler[e.target.name]=null;
+                                    errorHandler.error=false;
 
-
+                                  
+                                    setErrorHandler(errorHandler);
+                                
                                 }}
                                 value={(AccountData['Name']) ? AccountData['Name'] : ""}
-                            />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.Name?.status) ? error?.message?.Name?.message : ""}</p>
+
+                               
+                                                          
+                    />
+                    <p className=' text-red-600'>{errorHandler["Name"]?errorHandler["Name"]:""}</p>
+
+
+
+
                         </div>
 
                         <div className='parent'>
                             <div className="label">
-                                <span className="label-text text-slate-700">Parent Account </span>
+                                <span className="label-text text-slate-700 font-bold">Parent Account </span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-sm select-sm"
                                 name={result["Account ID"]?.name}
@@ -80,24 +102,29 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='accountNumber'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Number"].label} </span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Number"].label} </span>
                             </div>
                             <input type="text" placeholder="Account Number" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result["Account Number"].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[e.target.name]=null;
+                                    errorHandler.error=false
+
+
+                                    setErrorHandler(errorHandler)
 
                                 }}
                                 value={(AccountData["AccountNumber"]) ? AccountData["AccountNumber"] : ""}
 
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.AccountNumber?.status) ? error?.message?.AccountNumber?.message : ""}</p>
+                             <p className=' text-red-600'>{(errorHandler["AccountNumber"]) ? errorHandler["AccountNumber"] : ""}</p> 
 
                         </div>
 
                         <div className='accountSite'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Site"].label} </span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Site"].label} </span>
                             </div>
                             <input type="text" placeholder="Account Site" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result["Account Site"].name}
@@ -110,7 +137,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                         </div>
                         <div className='Account Type'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Type"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Type"].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm " name={result["Account Type"].name}
                                 onChange={(e) => {
@@ -133,7 +160,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Account Industry'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Industry"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Industry"].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm " name={result["Industry"].name}
 
@@ -157,18 +184,23 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                         </div>
                         <div className='AnnualRevenue'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Annual Revenue'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Annual Revenue'].label}</span>
                             </div>
                             <input type="text" placeholder="Account Revenue" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Annual Revenue'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[e.target.name]=null
+                                    errorHandler.error=false
+                                    setErrorHandler(errorHandler)
 
                                 }}
                                 value={(AccountData[result['Annual Revenue'].name]) ? AccountData[result['Annual Revenue'].name] : ""}
 
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.AnnualRevenue?.status) ? error?.message?.AnnualRevenue?.message : ""}</p>
+                             <p className=' text-red-600'>{(errorHandler["AnnualRevenue"]) ? errorHandler["AnnualRevenue"] : ""}
+                            
+                            </p> 
 
 
                         </div>
@@ -178,7 +210,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Rating'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Account Rating'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Account Rating'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
 
@@ -205,7 +237,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Phone'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Phone"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Phone"].label}</span>
                             </div>
                             <input type="text" placeholder="Phone" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Account Phone'].name}
@@ -223,7 +255,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Fax'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Account Fax'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Account Fax'].label}</span>
                             </div>
                             <input type="text" placeholder="Fax" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Account Fax'].name}
@@ -237,7 +269,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Website'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Website'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Website'].label}</span>
                             </div>
                             <input type="text" placeholder="Website" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Website'].name}
@@ -253,7 +285,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Ticker Symbol'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Ticker Symbol'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Ticker Symbol'].label}</span>
                             </div>
                             <input type="Ticker" placeholder="Ticker Symbol" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Ticker Symbol'].name}
@@ -270,7 +302,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Ownership'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Ownership'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Ownership'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm" name={result['Ownership'].name}
                                 onChange={(e) => {
@@ -295,17 +327,20 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='Employees'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Employees'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Employees'].label}</span>
                             </div>
                             <input type="text" placeholder="Employee" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Employees'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[e.target.name]=null;
+                                    errorHandler.error=false
+                                    setErrorHandler(errorHandler)
 
                                 }}
                                 value={(AccountData[result['Employees'].name]) ? AccountData[result['Employees'].name] : ""}
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.NumberOfEmployees?.status) ? error?.message?.NumberOfEmployees?.message : ""}</p>
+                             <p className=' text-red-600'>{(errorHandler["NumberOfEmployees"]) ? errorHandler["NumberOfEmployees"] : ""}</p> 
 
 
 
@@ -314,16 +349,21 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='SIC Code'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SIC Code'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SIC Code'].label}</span>
                             </div>
                             <input type='text' placeholder={result['SIC Code'].label} className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['SIC Code'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[e.target.name]=null;
+                                    errorHandler.error=false
+                                    setErrorHandler(errorHandler)
 
                                 }}
                                 value={(AccountData[result['SIC Code'].name]) ? AccountData[result['SIC Code'].name] : ""}
                             />
+                             <p className=' text-red-600'>{(errorHandler["Sic"]) ? errorHandler["Sic"] : ""}</p> 
+
                         </div>
                     </div>
                 </div>
@@ -518,7 +558,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                     <div className="section-1">
                         <div className="customer-priority">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Customer Priority'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Customer Priority'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result["Customer Priority"].name}
@@ -543,7 +583,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='expiration-date'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SLA Expiration Date'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SLA Expiration Date'].label}</span>
                             </div>
 
                             <input type="date" placeholder="expiration date" className="exp-date w-full max-w-xs bg-white border-2 border-slate-200 py-1 px-2 rounded-md input-sm"
@@ -558,7 +598,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className="number-location">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Number of Locations'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Number of Locations'].label}</span>
                             </div>
                             <input type="text" placeholder="Location" className="input w-full max-w-xs bg-white border-2 border-slate-200 py-1 px-2 rounded-md input-sm"
                                 name={result['Number of Locations'].name}
@@ -573,7 +613,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className="active">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Active'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Active'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result['Active'].name}
@@ -605,7 +645,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className="spa">
                             <div className="label">
-                                <span className="label-text text-slate-700">{
+                                <span className="label-text text-slate-700 font-bold">{
                                     result['SLA'].label
                                 }</span>
                             </div>
@@ -633,7 +673,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className='sla-serialNumber'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SLA Serial Number'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SLA Serial Number'].label}</span>
                             </div>
                             <input type="text" placeholder="Serial Number" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['SLA Serial Number'].name}
@@ -647,7 +687,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
 
                         <div className="upsell-opportunity">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Upsell Opportunity'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Upsell Opportunity'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result["Upsell Opportunity"].name}
@@ -678,7 +718,7 @@ function AccountInfoRecord({ AccountData, setAccountData, accountData }) {
                 <h1 className='additonal-information bg-slate-400 text-white px-2 py-1 rounded-md'>Description</h1>
                 <div className="four-section">
                     <div className="label">
-                        <span className="label-text text-slate-700">{"Description"}</span>
+                        <span className="label-text text-slate-700 font-bold">{"Description"}</span>
                     </div>
                     <textarea className="textarea textarea-bordered bg-slate-50  w-[90%] rounded-md " placeholder="Description"
                         name={"Description"}

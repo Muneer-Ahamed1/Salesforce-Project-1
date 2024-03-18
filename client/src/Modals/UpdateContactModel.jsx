@@ -26,14 +26,13 @@ export default function UpdateContactModel({ setEditById, editById }) {
   }, [editById])
 
   
-  function updateContact(data,id) {
+  function updateContact(data,id,closeModel) {
     let editData = {
       data,
       id: id
     }
     dispatch(updateContactByIdSlice(editData));
-
-
+    closeModel(true);
   }
 
 

@@ -8,7 +8,7 @@ export const loginApi=(code)=>{
                 code:code,
                 client_id:'3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.',
                 client_secret:'433883087F1891AC44D33F74A0DAA3D77919880C7DBDBB64B17592A4AF668B18',
-                redirect_uri:'http://localhost:5173/metaData',
+                redirect_uri:'http://localhost:5173/MiddlePage',
                 grant_type:"authorization_code"
             })
             

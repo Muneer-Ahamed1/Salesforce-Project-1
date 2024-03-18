@@ -3,9 +3,14 @@ import { ContactDescSlice } from "../features/Contact/ContactSlice"
 import { useDispatch, useSelector } from 'react-redux'
 import { describeDataModifying } from "./AccountInfoRecord";
 import Loading from './Loading';
-function ContactInfoRecord({ contactData, setContactData,accountData }) {
+function ContactInfoRecord({ contactData, setContactData,accountData,errorValidation,setErrorValidation }) {
     const dispatch = useDispatch();
     const { descContact } = useSelector((state) => state.contact);
+    console.log(errorValidation)
+    useEffect(()=>{
+        setErrorValidation(errorValidation);
+    },[errorValidation])
+    let contactValidation={};
 
     useEffect(() => {
         if (!descContact.data) {
@@ -29,7 +34,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                            
                             <div className=' Name'>
                                 <div className="label">
-                                    <span className="label-text text-slate-700">Name *</span>
+                                    <span className="label-text text-slate-700 font-bold">Name *</span>
                                 </div>
                                 <div className=' Name-part border-2 p-2 rounded-md'>
                                     <div className="div">
@@ -44,6 +49,12 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                             name={result["Salutation"].name}
                                             onChange={(e) => {
                                                 setContactData({ ...contactData, [e.target.name]: e.target.value })
+                                                if(e.target.value.length > 0) {
+                                                    errorValidation["error"].error=false;
+                                                    errorValidation[e.target.name].error=false;
+                                                    errorValidation[e.target.name].message=""
+                                                    setErrorValidation(errorValidation);
+                                                }
 
                                             }}
                                             value={(contactData[result['Salutation'].name]) ? contactData[result['Salutation'].name] : ""}
@@ -59,10 +70,12 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                                 })
                                             }
                                         </select>
+                                        <p className=' text-red-600'>{errorValidation[result['Salutation'].name].error ? errorValidation[result['Salutation'].name].message:"" }</p>
+
                                     </div>
                                     <div className="div">
                                         <div className="label">
-                                            <div className="label-text text-slate-700">
+                                            <div className="label-text text-slate-700 font-bold">
                                                 {
                                                     result["First Name"].label
                                                 }
@@ -78,7 +91,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                     </div>
                                     <div className="div">
                                         <div className="label">
-                                            <div className="label-text text-slate-700">
+                                            <div className="label-text text-slate-700 font-bold">
                                                 {
                                                     result["Last Name"].label
                                                 }
@@ -89,8 +102,15 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                             value={(contactData[result['Last Name'].name]) ? contactData[result['Last Name'].name] : ""}
                                             onChange={(e) => {
                                                 setContactData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+                                                if(e.target.value.length > 0) {
+                                                    errorValidation["error"].error=false;
+                                                    errorValidation[e.target.name].error=false;
+                                                    errorValidation[e.target.name].message=""
+                                                    setErrorValidation(errorValidation);
+                                                }
                                             }}
                                         />
+                                        <p className=' text-red-600'>{errorValidation[result['Last Name'].name].error ? errorValidation[result['Last Name'].name].message:"" }</p>
                                     </div>
 
 
@@ -101,7 +121,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
 
                             <div className="AccountName">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                              "Account Name"
                                         }
@@ -133,7 +153,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
 
                             <div className="Title">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Title"]?.label 
                                         }
@@ -150,7 +170,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Department">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Department"]?.label || "Department"
                                         }
@@ -167,7 +187,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Birthdate">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Birthdate"]?.label || "Birthdate"
                                         }
@@ -201,7 +221,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div> */}
                             <div className="Lead Source">
                                 <div className="label block">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Lead Source"]?.label || "Reports To"
                                         }
@@ -235,7 +255,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                         <div className="part-2">
                             <div className="Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Phone"]?.label || "Phone"
                                         }
@@ -254,7 +274,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Home Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Home Phone"]?.label || "Title"
                                         }
@@ -271,7 +291,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Mobile">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Mobile"]?.label || "Mobile"
                                         }
@@ -287,7 +307,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Other Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Other Phone"]?.label
                                         }
@@ -305,7 +325,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             <div className="Fax
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Fax"]?.label || "Fax"
                                         }
@@ -323,7 +343,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             <div className="Email
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Email"]?.label
                                         }
@@ -334,14 +354,22 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                                     value={(contactData[result['Email']?.name]) ? contactData[result['Email']?.name] : ""}
                                     onChange={(e) => {
                                         setContactData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+                                        if(e.target.value.length > 0) {
+                                            errorValidation["error"].error=false;
+                                            errorValidation[e.target.name].error=false;
+                                            errorValidation[e.target.name].message=""
+                                            setErrorValidation(errorValidation);
+                                        }
                                     }}
                                 />
+                       <p className=' text-red-600'>{errorValidation[result['Email'].name].error ? errorValidation[result['Email'].name].message:"" }</p>
+
 
                             </div>
                             <div className="Assistant
 ">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Assistant"]?.label || "Assistant"
                                         }
@@ -358,7 +386,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Asst. Phone">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Asst. Phone"]?.label
                                         }
@@ -380,7 +408,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
 
                 </div>
                 <div className="section-2">
-                    <h1 className=' bg-gray-300'>Address Information</h1>
+                    <h1 className=' bg-gray-300 font-bold'>Address Information</h1>
                     <div className=' second-section grid md:grid-cols-2 p-3 gap-4'>
 
                         <div className="first-section">
@@ -571,7 +599,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                         <div className="wrapper grid md:grid-cols-2 sm:gap-2 md:gap-4">
                             <div className="Languages">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Languages"]?.label || "Languages"
                                         }
@@ -588,7 +616,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                             </div>
                             <div className="Level">
                                 <div className="label">
-                                    <div className="label-text text-slate-700">
+                                    <div className="label-text text-slate-700 font-bold">
                                         {
                                             result["Level"].label
                                         }
@@ -625,7 +653,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData }) {
                 <h1 className=' bg-gray-300'>Description Information</h1>
                     <div className="Level">
                         <div className="label">
-                            <div className="label-text text-slate-700">
+                            <div className="label-text text-slate-700 font-bold">
                                 {
                                     result["Description"]?.label || "Description"
                                 }

@@ -70,7 +70,7 @@ function App() {
 
 
   return (
-<div className={`App min-h-[100vh] flex flex-col  `}>
+<div className={`App min-h-[100vh] flex flex-col bg-sky-50`}>
   
   <Navbar/>
   <DeleteProvider>
@@ -78,10 +78,8 @@ function App() {
   <Outlet/>: <Loading/>
 }
   </DeleteProvider>
-  <footer className="footer footer-center p-4  text-base-content  mt-auto">
-  <aside>
-    <p>Copyright © 2024 - All right reserved by ACME Industries Ltd</p>
-  </aside>
+  <footer className="footer footer-center  text-base-content  mt-auto bg-sky-100">
+ 
 </footer>
 </div>  )
 }

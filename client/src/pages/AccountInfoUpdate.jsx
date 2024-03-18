@@ -7,7 +7,7 @@ import Loading from './Loading';
 function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
     console.log(data);
     const dispatch = useDispatch();
-    const { error,accountUpdateData } = useSelector((state) => state.account);
+    const { error, accountUpdateData } = useSelector((state) => state.account);
     const accountDescribe = useSelector((state) => state.account.accountDescribe);
     const [AccountData, setAccountData] = useState(data);
     const [btnInfo, setBtnInfo] = useState(false);
@@ -27,24 +27,107 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
         }
 
     }, [btnInfo])
-    useEffect(()=>{
-        if(accountUpdateData.status) {
-            setBtnInfo(true);
-        }
-    },[accountUpdateData.status])
+
     if (!accountDescribe.data) {
-        return <Loading/>
+        return <Loading />
     }
 
     const result = describeDataModifying(accountDescribe);
 
     if (!AccountData) {
-        return <h1>{"ACCOUNT DATA IS NULL"}</h1>
+        return <Loading />
     }
+
+
+    let dumpValidation = {
+        error: false,
+        Name: null,
+        AccountNumber: null,
+        AnnualRevenue: null,
+        NumberOfEmployees: null,
+        Sic: null
+
+    };
+    const [errorHandler, setErrorHandler] = useState(dumpValidation);
+     useEffect(() => {
+         setErrorHandler(errorHandler);
+     }, [errorHandler])
+
+
+    const validateForm = (formData) => {
+        console.log("I AM STARTING OF FORM")
+        console.log(isNaN(formData["AccountNumber"]));
+        let dumpError = { ...errorHandler };
+
+        // Validate Name
+        if (!formData["Name"]) {
+            dumpError.error = true
+            dumpError["Name"] = "Name is required"
+        }
+        if (formData.AccountNumber) {
+            console.log("Account Number")
+
+            if (isNaN(formData.AccountNumber)) {
+                console.log("I AM INSIDE");
+                dumpError.error = true
+
+                dumpError["AccountNumber"] = "AccountNumber must be a  number";
+            }
+
+        }
+
+
+        // Validate AnnualRevenue if present
+        if (formData.AnnualRevenue) {
+            if (isNaN(formData.AnnualRevenue) ) {
+                console.log(" I AM INSIDE ANUALREVENUE")
+                console.log(isNaN(formData.AnnualRevenue))
+                console.log(formData.AnnualRevenue);
+                dumpError.error = true
+                dumpError["AnnualRevenue"] = "Annual revenue must be a  number";
+            }
+        }
+
+        // Validate NumberOfEmployees if present
+        if (formData.NumberOfEmployees && (isNaN(formData.NumberOfEmployees) || formData.NumberOfEmployees < 0)) {
+            dumpError.error = true
+            dumpError["NumberOfEmployees"] = "Number of employees must be a positive number";
+        }
+
+        // Validate Sic if present
+        if (formData.Sic) {
+            if (isNaN(formData.Sic) || formData.Sic < 0) {
+                dumpError.error = true
+                dumpError["Sic"] = "SIC must be a positive number";
+            }
+        }
+        console.log("I AM IN THE FORM VALIDATION LINE")
+        console.log(dumpError);
+
+        return dumpError;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <>
-            <form className='formData flex flex-col' onSubmit={(e) => e.preventDefault}>
+            <div className='formData flex flex-col' onSubmit={(e) => e.preventDefault}>
                 <h1 className=' bg-slate-400 text-white px-2 py-1 rounded-md'>Account Information</h1>
 
                 <div className="first-section grid md:grid-cols-2 p-3">
@@ -52,24 +135,27 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='name'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Name"].label}*</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Name"].label}*</span>
                             </div>
                             <input type="text" placeholder="Account Name" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm" required
                                 name={"Name"}
                                 onChange={(e) => {
                                     console.log("ddfssss===" + e.target.value);
                                     setAccountData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+                                    errorHandler["Name"] = null;
+                                    errorHandler.error = false
+                                    setErrorHandler(errorHandler);
 
 
                                 }}
                                 value={(AccountData['Name']) ? AccountData['Name'] : ""}
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.Name?.status) ? error?.message?.Name?.message : ""}</p>
+                            <p className=' text-red-600'>{errorHandler.Name ? errorHandler.Name : ""}</p>
                         </div>
 
                         <div className='parent'>
                             <div className="label">
-                                <span className="label-text text-slate-700">Parent Account </span>
+                                <span className="label-text text-slate-700 font-bold">Parent Account </span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-sm select-sm"
                                 name={"ParentId"}
@@ -94,24 +180,28 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='accountNumber'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Number"].label} </span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Number"].label} </span>
                             </div>
                             <input type="text" placeholder="Account Number" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result["Account Number"].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler["AccountNumber"] = null;
+                                    errorHandler.error = false;
+                                    setErrorHandler(errorHandler);
 
                                 }}
                                 value={(AccountData["AccountNumber"]) ? AccountData["AccountNumber"] : ""}
 
+
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.AccountNumber?.status) ? error?.message?.AccountNumber?.message : ""}</p>
+                            <p className=' text-red-600'>{errorHandler["AccountNumber"] ? errorHandler["AccountNumber"] : ""}</p>
 
                         </div>
 
                         <div className='accountSite'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Site"].label} </span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Site"].label} </span>
                             </div>
                             <input type="text" placeholder="Account Site" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result["Account Site"].name}
@@ -124,7 +214,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                         </div>
                         <div className='Account Type'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Type"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Type"].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm " name={result["Account Type"].name}
                                 onChange={(e) => {
@@ -147,7 +237,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Account Industry'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Industry"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Industry"].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm " name={result["Industry"].name}
 
@@ -171,18 +261,23 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                         </div>
                         <div className='AnnualRevenue'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Annual Revenue'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Annual Revenue'].label}</span>
                             </div>
                             <input type="text" placeholder="Account Revenue" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Annual Revenue'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler["AnnualRevenue"] = null;
+                                    errorHandler.error = false;
+                                    setErrorHandler(errorHandler);
 
                                 }}
                                 value={(AccountData[result['Annual Revenue'].name]) ? AccountData[result['Annual Revenue'].name] : ""}
 
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.AnnualRevenue?.status) ? error?.message?.AnnualRevenue?.message : ""}</p>
+                            <p className=' text-red-600'>{errorHandler["AnnualRevenue"] ? errorHandler.Name : ""}</p>
+
+
 
 
                         </div>
@@ -192,7 +287,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Rating'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Account Rating'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Account Rating'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
 
@@ -219,7 +314,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Phone'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result["Account Phone"].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result["Account Phone"].label}</span>
                             </div>
                             <input type="text" placeholder="Phone" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Account Phone'].name}
@@ -237,7 +332,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Fax'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Account Fax'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Account Fax'].label}</span>
                             </div>
                             <input type="text" placeholder="Fax" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Account Fax'].name}
@@ -251,7 +346,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Website'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Website'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Website'].label}</span>
                             </div>
                             <input type="text" placeholder="Website" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Website'].name}
@@ -267,7 +362,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Ticker Symbol'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Ticker Symbol'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Ticker Symbol'].label}</span>
                             </div>
                             <input type="Ticker" placeholder="Ticker Symbol" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Ticker Symbol'].name}
@@ -284,7 +379,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Ownership'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Ownership'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Ownership'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm" name={result['Ownership'].name}
                                 onChange={(e) => {
@@ -309,17 +404,20 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='Employees'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Employees'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Employees'].label}</span>
                             </div>
                             <input type="text" placeholder="Employee" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['Employees'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[event.target.name] = null;
+                                    errorHandler.error = false;
+                                    setErrorHandler(errorHandler);
 
                                 }}
                                 value={(AccountData[result['Employees'].name]) ? AccountData[result['Employees'].name] : ""}
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.NumberOfEmployees?.status) ? error?.message?.NumberOfEmployees?.message : ""}</p>
+                            <p className=' text-red-600'>{errorHandler[result['Employees'].name] ? errorHandler[result['Employees'].name] : ""}</p>
 
 
 
@@ -328,17 +426,21 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='SIC Code'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SIC Code'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SIC Code'].label}</span>
                             </div>
                             <input type='text' placeholder={result['SIC Code'].label} className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['SIC Code'].name}
                                 onChange={(e) => {
                                     setAccountData({ ...AccountData, [e.target.name]: e.target.value })
+                                    errorHandler[e.target.name] = null;
+                                    errorHandler.error=false;
 
                                 }}
                                 value={(AccountData[result['SIC Code'].name]) ? AccountData[result['SIC Code'].name] : ""}
                             />
-                            <p className=' text-red-600'>{(error.error && error?.message?.status && error?.message?.Sic?.status) ? error?.message?.Sic?.message : ""}</p>
+                            <p className=' text-red-600'>{errorHandler[result['SIC Code'].name] ? errorHandler[result['SIC Code'].name] : ""}</p>
+
+
                         </div>
                     </div>
                 </div>
@@ -531,7 +633,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                     <div className="section-1">
                         <div className="customer-priority">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Customer Priority'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Customer Priority'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result["Customer Priority"].name}
@@ -556,7 +658,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='expiration-date'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SLA Expiration Date'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SLA Expiration Date'].label}</span>
                             </div>
 
                             <input type="date" placeholder="expiration date" className="exp-date w-full max-w-xs bg-white border-2 border-slate-200 py-1 px-2 rounded-md input-sm"
@@ -571,7 +673,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className="number-location">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Number of Locations'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Number of Locations'].label}</span>
                             </div>
                             <input type="text" placeholder="Location" className="input w-full max-w-xs bg-white border-2 border-slate-200 py-1 px-2 rounded-md input-sm"
                                 name={result['Number of Locations'].name}
@@ -586,7 +688,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className="active">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Active'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Active'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result['Active'].name}
@@ -618,7 +720,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className="spa">
                             <div className="label">
-                                <span className="label-text text-slate-700">{
+                                <span className="label-text text-slate-700 font-bold">{
                                     result['SLA'].label
                                 }</span>
                             </div>
@@ -646,7 +748,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className='sla-serialNumber'>
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['SLA Serial Number'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['SLA Serial Number'].label}</span>
                             </div>
                             <input type="text" placeholder="Serial Number" className="input  w-full max-w-xs bg-white border-2 border-slate-200 rounded-md input-sm"
                                 name={result['SLA Serial Number'].name}
@@ -660,7 +762,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                         <div className="upsell-opportunity">
                             <div className="label">
-                                <span className="label-text text-slate-700">{result['Upsell Opportunity'].label}</span>
+                                <span className="label-text text-slate-700 font-bold">{result['Upsell Opportunity'].label}</span>
                             </div>
                             <select className="select select-bordered w-full max-w-xs bg-white rounded-md select-sm"
                                 name={result["Upsell Opportunity"].name}
@@ -691,7 +793,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                 <h1 className='additonal-information bg-slate-400 text-white px-2 py-1 rounded-md'>Description</h1>
                 <div className="four-section">
                     <div className="label">
-                        <span className="label-text text-slate-700">{"Description"}</span>
+                        <span className="label-text text-slate-700 font-bold">{"Description"}</span>
                     </div>
                     <textarea className="textarea textarea-bordered bg-slate-50  w-[90%] rounded-md " placeholder="Description"
                         name={"Description"}
@@ -724,14 +826,15 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                         <form method={"dialog"} >
                             <button className="btn bg-success text-white border-0 btn-sm "
                                 ref={btnRef}
-                                onClick={()=>{console.log("I AM BTN_1")
-                            console.log(btnInfo);
-                            }}
+                                onClick={() => {
+                                    console.log("I AM BTN_1")
+                                    console.log(btnInfo);
+                                }}
 
 
                             >Save</button>
 
-                        </form> : <form onSubmit={(e)=>e.preventDefault()}>
+                        </form> : <form onSubmit={(e) => e.preventDefault()}>
                             <button className="btn bg-success text-white border-0 btn-sm " onClick={(e) => {
                                 e.stopPropagation();
                                 const dumpData = {};
@@ -764,7 +867,15 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
                                 }
                                 console.log(dumpData);
                                 console.log(AccountData);
-                                updateAccountAdded(dumpData,setBtnInfo);
+                                let validForm=validateForm(dumpData)
+                                setErrorHandler(validForm);
+                                console.log(errorHandler);
+
+                                if (!validForm.error) {
+                                    console.log("I AM ERROR HANDLER ACCOUNR UPDATE");
+                                      console.log(errorHandler);
+                                     updateAccountAdded(dumpData,setBtnInfo);
+                                }
 
 
                             }}>Save</button>
@@ -773,7 +884,7 @@ function AccountInfoUpdate({ data, accountData, updateAccountAdded }) {
 
                     }
                 </div>
-            </form>
+            </div>
         </>
     )
 }
