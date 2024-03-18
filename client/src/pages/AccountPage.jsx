@@ -40,6 +40,13 @@ function AccountPage() {
             dispatch(fetchAllAccountRecordsSlice());
         }
     }, [accountDeleted.status]);
+    useEffect(()=>{
+        if(!accountData)
+    {
+      dispatch(fetchAllAccountRecordsSlice());
+    }
+      },[accountData])
+      
     const {error}=useSelector((state)=>state.account);
  
     console.log(accountData);

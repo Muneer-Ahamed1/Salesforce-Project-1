@@ -16,13 +16,13 @@ export default function Navbar() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
-  const LogOutFun=()=>{
-    console.log("Log Out")
+  const LogOutFun = () => {
+    console.log("Log Out");
     sessionStorage.clear();
-    location.reload();
+    location.href="/"
+   
+};
 
-
-  }
 
   return (
 <div className={`relative w-full bg-cryson-100`}>

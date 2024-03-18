@@ -29,9 +29,7 @@ function MiddlePage() {
             navigate("/accountPage");
         }
         if(auth.error.error) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            localStorage.removeItem("instance_url");
+            
             navigate("/");
         }
 

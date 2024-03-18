@@ -59,7 +59,6 @@ console.log(urlCode)
   return (
     <div className="relative w-full h-[80vh]" >
       {
-     (!loading )?
       <div className="relative isolate z-0 px-6 pt-14 lg:px-8">
         <div className="relative mx-auto max-w-2xl py-24">
           <div className="absolute inset-x-0 -top-[4rem] -z-10 transform-gpu overflow-hidden blur-3xl md:-top-[10rem]">
@@ -111,7 +110,7 @@ console.log(urlCode)
             </div>
           </div>
         </div>
-      </div>:<Loading/>
+      </div>
 }
     </div>
   )

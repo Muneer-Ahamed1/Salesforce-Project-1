@@ -28,12 +28,12 @@ function AccountMain({ accountData,fetchOwnerShip,searchQuery }) {
     dispatch(fetchRecordByIdSlice(id));
 
   }
-   useEffect(()=>{
-     if(!accountData)
- {
-   dispatch(fetchAllAccountRecordsSlice());
- }
-   },[accountData])
+//    useEffect(()=>{
+//      if(!accountData)
+//  {
+//    dispatch(fetchAllAccountRecordsSlice());
+//  }
+//    },[accountData])
 
 
  
