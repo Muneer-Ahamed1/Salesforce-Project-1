@@ -28,7 +28,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData,errorValida
         <div className="Contact">
             <div className="wrapper sm:p-2">
                 <div className="section-1">
-                    <h1 className=' bg-gray-300'>Contact Information</h1>
+                    <h1 className=' bg-gray-400 text-white px-2 py-1 rounded-md'>Contact Information</h1>
                     <div className="section grid md:grid-cols-2 gap-4 p-2">
                         <div className="part-1">
                            
@@ -408,7 +408,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData,errorValida
 
                 </div>
                 <div className="section-2">
-                    <h1 className=' bg-gray-300 font-bold'>Address Information</h1>
+                    <h1 className=' bg-gray-400 text-white px-2 py-1 rounded-md'>Address Information</h1>
                     <div className=' second-section grid md:grid-cols-2 p-3 gap-4'>
 
                         <div className="first-section">
@@ -594,7 +594,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData,errorValida
 
                 </div>
                 <div className="section-3">
-                    <h1 className=' bg-gray-300'>Address Information</h1>
+                    <h1 className=' bg-gray-400 text-white px-2 py-1 rounded-md'>Address Information</h1>
                     <div className="section ">
                         <div className="wrapper grid md:grid-cols-2 sm:gap-2 md:gap-4">
                             <div className="Languages">
@@ -650,7 +650,7 @@ function ContactInfoRecord({ contactData, setContactData,accountData,errorValida
 
                 </div>
                 <div className="section-4 mt-2">
-                <h1 className=' bg-gray-300'>Description Information</h1>
+                <h1 className=' bg-gray-400 text-white px-2 py-1 rounded-md'>Description Information</h1>
                     <div className="Level">
                         <div className="label">
                             <div className="label-text text-slate-700 font-bold">

@@ -52,7 +52,7 @@ export default function HeroThree() {
 
     //  },[isLogin])
 const authCodeFun=()=>{
-    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=http://localhost:5173/MiddlePage&response_type=code`
+    window.location.href=`https://login.salesforce.com/services/oauth2/authorize?client_id=3MVG9pRzvMkjMb6l1H0ThA6FCQFWcvPbdUMz720Y6aqMS75NWxumufCiToTnLvvPqx0Lhcyh.1h0P1ZO9oHJ.&redirect_uri=https://salesforce-project-1-9k23.vercel.app/MiddlePage&response_type=code`
 }
 console.log(urlCode)
 
