@@ -79,6 +79,7 @@ const login = createSlice({
       state.deleteConXyz.loading=false;
       state.error.error=true;
       state.error.message=payload;
+      console.log(payload);
       toast.error("Contact can't be deleted")
   })
     
