@@ -41,8 +41,9 @@ function AccountPage() {
         }
     }, [accountDeleted.status]);
     useEffect(()=>{
-    
+    if(accountData.accountData) {
       dispatch(fetchAllAccountRecordsSlice());
+    }
       document.documentElement.classList.add('light');
       localStorage.setItem("data-theme", "light");
       document.documentElement.setAttribute('data-theme', localStorage.getItem("data-theme"));
