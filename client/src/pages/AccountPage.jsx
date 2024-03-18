@@ -41,12 +41,18 @@ function AccountPage() {
         }
     }, [accountDeleted.status]);
     useEffect(()=>{
-        if(!accountData)
-    {
+    
       dispatch(fetchAllAccountRecordsSlice());
-    }
-      },[accountData])
+      document.documentElement.classList.add('light');
+      localStorage.setItem("data-theme", "light");
+      document.documentElement.setAttribute('data-theme', localStorage.getItem("data-theme"));
       
+      
+      
+    
+      },[accountData])
+      console.log(accountData);
+
     const {error}=useSelector((state)=>state.account);
  
     console.log(accountData);
